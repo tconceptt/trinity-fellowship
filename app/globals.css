@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f0e8;
+  --foreground: #1e2a31;
+  --surface: #fbf8f3;
+  --surface-strong: #f0e9dd;
+  --muted: #586574;
+  --line: #d9cfbd;
+  --brand: #1f3b53;
+  --brand-soft: #506d83;
+  --accent: #7f5b34;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-source-sans);
+  --font-serif: var(--font-cormorant);
+}
+
+/* ── base ──────────────────────────────────── */
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-source-sans), "Source Sans 3", sans-serif;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(1200px 600px at 10% -10%, rgba(31, 59, 83, 0.10), transparent 58%),
+    radial-gradient(900px 500px at 100% 20%, rgba(127, 91, 52, 0.10), transparent 55%),
+    linear-gradient(180deg, #f8f4ed 0%, #f5f0e8 100%);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-cormorant), "Cormorant Garamond", serif;
+  letter-spacing: 0.01em;
+}
+
+a {
+  transition: color 200ms ease, border-color 200ms ease, background-color 200ms ease;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── selection colour ─────────────────────── */
+
+::selection {
+  background-color: rgba(31, 59, 83, 0.15);
+  color: var(--foreground);
+}
+
+/* ── scrollbar (subtle) ───────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-soft);
+}
+
+/* ── accessibility: reduced motion ────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* framer-motion handles its own reduced-motion,
+     but we disable any remaining CSS animations */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
