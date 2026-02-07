@@ -14,7 +14,6 @@ import {
   InfiniteScrollLoop,
 } from "./components/animations";
 import { Header } from "./components/header";
-import { MapPin } from "lucide-react";
 
 /* ── data ───────────────────────────────────── */
 
@@ -129,6 +128,7 @@ function HeroSection() {
           src="/images/group-photo.jpeg"
           alt="Worship gathering at Trinity Fellowship"
           fill
+          sizes="100vw"
           className="object-cover object-center"
           priority
         />
@@ -242,6 +242,7 @@ export default function Home() {
           src="/images/addis-city.jpg"
           alt="Addis Ababa cityscape"
           fill
+          sizes="100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(14,33,48,0.72)_14%,rgba(14,33,48,0.25)_50%,rgba(14,33,48,0.72)_100%)]" />
@@ -378,6 +379,7 @@ export default function Home() {
           src="/images/scripture-prayer.jpg"
           alt="Open Bible and prayerful hands"
           fill
+          sizes="100vw"
           className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(12,28,41,0.78)_12%,rgba(12,28,41,0.30)_56%,rgba(12,28,41,0.78)_100%)]" />
@@ -424,6 +426,7 @@ export default function Home() {
                 alt="Pastors College Class of 2026"
                 width={800}
                 height={500}
+                sizes="(max-width: 768px) 100vw, 768px"
                 className="w-full object-cover"
               />
             </div>
@@ -475,7 +478,10 @@ export default function Home() {
                 className="group relative flex w-full items-center gap-5 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:border-[color:var(--brand-soft)] hover:shadow-lg hover:shadow-[rgba(31,59,83,0.06)]"
               >
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[color:var(--brand)]/10 transition-transform duration-300 group-hover:scale-110">
-                  <MapPin className="h-7 w-7 text-[color:var(--brand)]" strokeWidth={1.8} />
+                  <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="var(--brand)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-lg font-semibold text-[color:var(--foreground)] transition-colors duration-300 group-hover:text-[color:var(--brand)]">
