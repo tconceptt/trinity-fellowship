@@ -19,7 +19,7 @@ export function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#fbf8f3]/90 backdrop-blur-md border-b border-[color:var(--line)] py-2"
+          ? "bg-[#fbf8f3]/90 backdrop-blur-md border-b border-[color:var(--line)] pt-5 pb-2"
           : "bg-transparent py-4"
       }`}
     >
@@ -64,7 +64,7 @@ export function Header() {
         </div>
 
         {/* Mobile Navigation */}
-        <MobileNav scrolled={scrolled} />
+        <MobileNav />
       </div>
     </header>
   );

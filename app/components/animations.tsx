@@ -229,7 +229,7 @@ export function ScrollProgress() {
 
   return (
     <motion.div
-      className="fixed left-0 right-0 top-0 z-50 h-[2px] origin-left bg-[color:var(--accent)]"
+      className="fixed left-0 right-0 top-0 z-[60] h-[2px] origin-left bg-[color:var(--accent)]"
       style={{ scaleX }}
     />
   );
@@ -264,27 +264,28 @@ export function NumberReveal({
 }
 
 /* ──────────────────────────────────────────────
-   HorizontalScrollSection – scroll-linked
-   horizontal movement
+   InfiniteScrollLoop – continuous auto-scrolling
    ────────────────────────────────────────────── */
-export function HorizontalScroll({
+export function InfiniteScrollLoop({
   children,
   className = "",
+  duration = 50,
 }: {
   children: ReactNode;
   className?: string;
+  duration?: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-15%"]);
-
   return (
-    <div ref={ref} className={`overflow-hidden ${className}`}>
-      <motion.div style={{ x }} className="flex w-max items-center">
+    <div className={`overflow-hidden ${className}`}>
+      <motion.div
+        className="flex w-max items-center"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{
+          duration: duration,
+          ease: "linear",
+          repeat: Infinity,
+        }}
+      >
         {children}
       </motion.div>
     </div>

@@ -11,9 +11,10 @@ import {
   TextReveal,
   SectionDivider,
   ScrollProgress,
-  HorizontalScroll,
+  InfiniteScrollLoop,
 } from "./components/animations";
 import { Header } from "./components/header";
+import { MapPin } from "lucide-react";
 
 /* ── data ───────────────────────────────────── */
 
@@ -102,8 +103,7 @@ function HeroSection() {
           </h1>
 
           <p className="mt-6 max-w-md text-lg leading-relaxed text-[#586574]">
-            A Christ-exalting community in Addis Ababa — gathering for reverent
-            worship, biblical preaching, and genuine connection.
+            A gospel-centered community that exists to know God and make Him known.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-4">
@@ -126,7 +126,7 @@ function HeroSection() {
       {/* ── Mobile Image (Bottom) ── */}
       <div className="relative h-[45vh] w-full shrink-0 lg:hidden">
         <Image
-          src="/images/hero-worship.jpg"
+          src="/images/group-photo.jpeg"
           alt="Worship gathering at Trinity Fellowship"
           fill
           className="object-cover object-center"
@@ -152,7 +152,7 @@ function HeroSection() {
       <div className="relative hidden h-auto w-[45%] lg:block">
         <div className="absolute inset-0 h-full w-full">
           <Image
-            src="/images/hero-worship.jpg"
+            src="/images/group-photo.jpeg"
             alt="Worship gathering at Trinity Fellowship"
             fill
             className="object-cover object-center"
@@ -336,7 +336,7 @@ export default function Home() {
 
         {/* scroll-linked doctrine marquee */}
         <div className="mt-14">
-          <HorizontalScroll className="border-y border-[color:var(--line)] py-6">
+          <InfiniteScrollLoop className="border-y border-[color:var(--line)] py-6" duration={60}>
             {[...doctrineThemes, ...doctrineThemes].map((theme, i) => (
               <span
                 key={`${theme}-${i}`}
@@ -346,7 +346,7 @@ export default function Home() {
                 <span className="ml-10 text-[color:var(--line)] sm:ml-14">/</span>
               </span>
             ))}
-          </HorizontalScroll>
+          </InfiniteScrollLoop>
         </div>
 
         <div className="mx-auto mt-10 flex max-w-7xl flex-wrap gap-3 px-5 sm:px-8">
@@ -356,7 +356,7 @@ export default function Home() {
               target="_blank"
               className="inline-flex rounded-full border border-[color:var(--line)] bg-[color:var(--surface)] px-6 py-3 text-sm font-semibold text-[color:var(--brand)] transition-all duration-300 hover:border-[color:var(--brand)] hover:shadow-md"
             >
-              Open Local PDF
+              View Statement of Faith PDF
             </Link>
           </ScrollReveal>
           <ScrollReveal delay={0.2}>
@@ -399,6 +399,50 @@ export default function Home() {
       </div>
       <div className="h-[20vh] sm:h-[20vh]" />
 
+      <SectionDivider className="mx-auto max-w-7xl px-5 sm:px-8" />
+
+      {/* ── pastors college ────────────────── */}
+      <section id="college" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
+        <div className="mx-auto max-w-3xl text-center">
+          <ScrollReveal>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
+              Training
+            </p>
+          </ScrollReveal>
+          <TextReveal delay={0.1}>
+            <h2 className="mt-3 text-4xl sm:text-5xl lg:text-6xl">
+              Pastors College
+            </h2>
+          </TextReveal>
+          <ScrollReveal delay={0.2}>
+            <p className="mt-6 text-lg leading-relaxed text-[color:var(--muted)]">
+              Equipping the next generation of African pastors for gospel-centered ministry within the context of the local church.
+            </p>
+            <div className="mt-10 overflow-hidden rounded-2xl">
+              <Image
+                src="/images/pc-class-of26.jpg"
+                alt="Pastors College Class of 2026"
+                width={800}
+                height={500}
+                className="w-full object-cover"
+              />
+            </div>
+            <div className="mt-10">
+              <a
+                href="https://tfpastorscollege.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full bg-[color:var(--brand)] px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-[color:var(--brand-soft)] hover:shadow-lg"
+              >
+                Visit College Website
+              </a>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      <SectionDivider className="mx-auto max-w-7xl px-5 sm:px-8" />
+
       {/* ── visit ──────────────────────────── */}
       <section id="visit" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
         <div className="grid gap-12 md:grid-cols-2 md:gap-16">
@@ -421,47 +465,52 @@ export default function Home() {
             </ScrollReveal>
           </div>
 
-          <StaggerChildren className="flex flex-col justify-center gap-4" staggerDelay={0.12}>
+          <StaggerChildren className="flex flex-col justify-center gap-5" staggerDelay={0.12}>
+            {/* Google Maps */}
             <StaggerItem direction="left">
               <a
                 href="https://www.google.com/maps/search/?api=1&query=Trinity+Fellowship+Addis+Ababa"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex w-full items-center justify-between rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-5 text-sm font-semibold text-[color:var(--brand)] transition-all duration-300 hover:border-[color:var(--brand)] hover:shadow-lg hover:shadow-[rgba(31,59,83,0.06)]"
+                className="group relative flex w-full items-center gap-5 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:border-[color:var(--brand-soft)] hover:shadow-lg hover:shadow-[rgba(31,59,83,0.06)]"
               >
-                <div>
-                  <p className="text-base font-semibold">Google Maps</p>
-                  <p className="mt-0.5 text-xs font-normal text-[color:var(--muted)]">
-                    Get directions to our meeting place
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[color:var(--brand)]/10 transition-transform duration-300 group-hover:scale-110">
+                  <MapPin className="h-7 w-7 text-[color:var(--brand)]" strokeWidth={1.8} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-lg font-semibold text-[color:var(--foreground)] transition-colors duration-300 group-hover:text-[color:var(--brand)]">
+                    Get Directions
+                  </p>
+                  <p className="mt-0.5 text-sm text-[color:var(--muted)]">
+                    5th Floor, EGST &middot; Sarbet, Addis Ababa
                   </p>
                 </div>
-                <span
-                  aria-hidden="true"
-                  className="text-lg transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                >
-                  &#8599;
-                </span>
               </a>
             </StaggerItem>
+
+            {/* Instagram */}
             <StaggerItem direction="left">
               <a
-                href="https://instagram.com/trinityfellowshipaddis"
+                href="https://instagram.com/trinityfellowshipaddisababa"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex w-full items-center justify-between rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-5 text-sm font-semibold text-[color:var(--brand)] transition-all duration-300 hover:border-[color:var(--brand)] hover:shadow-lg hover:shadow-[rgba(31,59,83,0.06)]"
+                className="group relative flex w-full items-center gap-5 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:border-[color:var(--brand-soft)] hover:shadow-lg hover:shadow-[rgba(31,59,83,0.06)]"
               >
-                <div>
-                  <p className="text-base font-semibold">Instagram</p>
-                  <p className="mt-0.5 text-xs font-normal text-[color:var(--muted)]">
-                    Follow @trinityfellowshipaddis for updates
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[color:var(--accent)]/10 transition-transform duration-300 group-hover:scale-110">
+                  <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="2" width="20" height="20" rx="5" />
+                    <circle cx="12" cy="12" r="5" />
+                    <circle cx="17.5" cy="6.5" r="1" fill="var(--accent)" stroke="none" />
+                  </svg>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-lg font-semibold text-[color:var(--foreground)] transition-colors duration-300 group-hover:text-[color:var(--accent)]">
+                    Follow on Instagram
+                  </p>
+                  <p className="mt-0.5 text-sm text-[color:var(--muted)]">
+                    @trinityfellowshipaddisababa
                   </p>
                 </div>
-                <span
-                  aria-hidden="true"
-                  className="text-lg transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                >
-                  &#8599;
-                </span>
               </a>
             </StaggerItem>
           </StaggerChildren>
@@ -483,8 +532,8 @@ export default function Home() {
               <p className="text-xs">Part of Sovereign Grace Churches</p>
             </div>
           </div>
-          <nav className="flex gap-6 text-xs font-semibold uppercase tracking-[0.1em]">
-            {["About", "Schedule", "Beliefs", "Visit"].map((label) => (
+          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs font-semibold uppercase tracking-[0.1em]">
+            {["About", "Schedule", "Beliefs", "College", "Visit"].map((label) => (
               <a
                 key={label}
                 href={`#${label.toLowerCase()}`}
