@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useScroll, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 import { MobileNav } from "./mobile-nav";
 
-const navLinks = ["About", "Schedule", "Beliefs", "Visit"];
+const navLinks = ["About", "Schedule", "Children", "Beliefs", "Visit"];
 
 export function Header() {
   const { scrollY } = useScroll();

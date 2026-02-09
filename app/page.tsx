@@ -20,7 +20,7 @@ import { Header } from "./components/header";
 const weeklyRhythm = [
   {
     day: "Sunday",
-    event: "Church Prayer",
+    event: "Corporate Prayer Meeting",
     time: "9:00 AM",
     summary: "A dedicated hour of prayer before the gathered worship service.",
   },
@@ -29,18 +29,6 @@ const weeklyRhythm = [
     event: "Worship Gathering",
     time: "10:00 AM",
     summary: "Expository preaching, congregational singing, and shared fellowship.",
-  },
-  {
-    day: "Wednesday",
-    event: "Midweek Bible Study",
-    time: "6:30 PM",
-    summary: "Scripture-centered teaching, prayer, and discussion in community.",
-  },
-  {
-    day: "Friday",
-    event: "Prayer & Fellowship",
-    time: "6:30 PM",
-    summary: "A calm evening for prayer, encouragement, and spiritual care.",
   },
 ];
 
@@ -75,6 +63,21 @@ const ministryFocus = [
     title: "Witness",
     number: "03",
     detail: "We make disciples and serve our city with gospel clarity and love.",
+  },
+];
+
+const childrenMinistryDetails = [
+  {
+    label: "When",
+    value: "Sunday, 11:00 AM - 12:00 PM",
+  },
+  {
+    label: "Where",
+    value: "In the same building as the church gathering",
+  },
+  {
+    label: "Ages",
+    value: "Children ages 4 to 12",
   },
 ];
 
@@ -182,6 +185,8 @@ function HeroSection() {
 /* ── main page ──────────────────────────────── */
 
 export default function Home() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <div className="min-h-screen">
       <ScrollProgress />
@@ -267,16 +272,16 @@ export default function Home() {
       <section id="schedule" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
         <ScrollReveal>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
-            Weekly Rhythm
+            Sunday Schedule
           </p>
         </ScrollReveal>
         <TextReveal delay={0.1}>
-          <h2 className="mt-3 text-4xl sm:text-5xl lg:text-6xl">Gather With Us</h2>
+          <h2 className="mt-3 text-4xl sm:text-5xl lg:text-6xl">Join Us Every Sunday</h2>
         </TextReveal>
         <ScrollReveal delay={0.2}>
           <p className="mt-4 max-w-2xl text-[color:var(--muted)]">
-            All times are Addis Ababa local time (EAT). We would love to welcome you to prayer and
-            worship.
+            All times are Addis Ababa local time (EAT). Our two regular Sunday gatherings are
+            corporate prayer at 9:00 AM and worship at 10:00 AM.
           </p>
         </ScrollReveal>
 
@@ -312,6 +317,49 @@ export default function Home() {
             </StaggerItem>
           ))}
         </StaggerChildren>
+      </section>
+
+      <SectionDivider className="mx-auto max-w-7xl px-5 sm:px-8" />
+
+      {/* ── children ministry ─────────────── */}
+      <section id="children" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
+        <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
+          <div>
+            <ScrollReveal>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
+                Family Ministry
+              </p>
+            </ScrollReveal>
+            <TextReveal delay={0.1}>
+              <h2 className="mt-3 text-4xl sm:text-5xl lg:text-6xl">Children&apos;s Ministry</h2>
+            </TextReveal>
+            <ScrollReveal delay={0.2}>
+              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-[color:var(--muted)]">
+                Every Sunday from 11:00 AM to 12:00 PM, children ages 4 to 12 are welcomed into a
+                safe and joyful space to learn the Scriptures and get to know Jesus.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal delay={0.28}>
+              <p className="mt-4 max-w-2xl text-[color:var(--muted)]">
+                Parents can attend the main service with peace of mind, knowing their children are
+                cared for nearby in the same building.
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <StaggerChildren className="space-y-4 self-center" staggerDelay={0.1}>
+            {childrenMinistryDetails.map((item) => (
+              <StaggerItem key={item.label} direction="left">
+                <div className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:border-[color:var(--brand-soft)] hover:shadow-lg hover:shadow-[rgba(31,59,83,0.06)]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--brand-soft)]">
+                    {item.label}
+                  </p>
+                  <p className="mt-2 text-lg text-[color:var(--foreground)]">{item.value}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerChildren>
+        </div>
       </section>
 
       <SectionDivider className="mx-auto max-w-7xl px-5 sm:px-8" />
@@ -462,36 +510,103 @@ export default function Home() {
             </TextReveal>
             <ScrollReveal delay={0.25}>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-[color:var(--muted)]">
-                Trinity Fellowship meets in the Sarbet area of Addis Ababa. Come early for prayer
-                and stay after service to connect with the church family.
+                Trinity Fellowship meets in the Sarbet area of Addis Ababa for Sunday worship.
+                During the week, you can also visit our church office on the first floor of Karama
+                Building.
               </p>
             </ScrollReveal>
           </div>
 
           <StaggerChildren className="flex flex-col justify-center gap-5" staggerDelay={0.12}>
-            {/* Google Maps */}
+            {/* Locations */}
             <StaggerItem direction="left">
-              <a
-                href="https://www.google.com/maps/search/?api=1&query=Trinity+Fellowship+Addis+Ababa"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative flex w-full items-center gap-5 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:border-[color:var(--brand-soft)] hover:shadow-lg hover:shadow-[rgba(31,59,83,0.06)]"
-              >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[color:var(--brand)]/10 transition-transform duration-300 group-hover:scale-110">
-                  <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="var(--brand)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
+              <div className="relative w-full overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[linear-gradient(135deg,rgba(31,59,83,0.06),rgba(31,59,83,0.015))] p-6">
+                <div className="flex items-start gap-4">
+                  <div className="mt-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[color:var(--brand)]/10">
+                    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="var(--brand)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-lg font-semibold text-[color:var(--foreground)]">
+                      Find Us
+                    </p>
+                    <p className="mt-1 text-sm text-[color:var(--muted)]">
+                      One church, two places: Sunday gathering and weekday office.
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-lg font-semibold text-[color:var(--foreground)] transition-colors duration-300 group-hover:text-[color:var(--brand)]">
-                    Get Directions
-                  </p>
-                  <p className="mt-0.5 text-sm text-[color:var(--muted)]">
-                    5th Floor, EGST &middot; Sarbet, Addis Ababa
-                  </p>
+
+                <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--brand-soft)]">
+                  Tap a location to open maps
+                </p>
+
+                <div className="mt-3 space-y-3">
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=Trinity+Fellowship+Addis+Ababa"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative flex items-center gap-3 rounded-xl border border-[color:var(--line)] bg-[color:var(--surface)] px-4 py-3 transition-all duration-300 hover:border-[color:var(--brand-soft)] hover:bg-[color:var(--surface-strong)] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--brand-soft)]"
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[color:var(--brand)]/10">
+                      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="var(--brand)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-[color:var(--foreground)] transition-colors duration-300 group-hover:text-[color:var(--brand)]">
+                        Sunday Gathering
+                      </p>
+                      <p className="mt-1 text-xs text-[color:var(--muted)]">
+                        5th Floor, EGST &middot; Sarbet
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 text-[color:var(--brand-soft)]">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.1em]">
+                        Open map
+                      </span>
+                      <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6" />
+                      </svg>
+                    </div>
+                  </a>
+
+                  <a
+                    href="https://maps.app.goo.gl/wEFC31hvkY5aKcDMA"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative flex items-center gap-3 rounded-xl border border-[color:var(--line)] bg-[color:var(--surface)] px-4 py-3 transition-all duration-300 hover:border-[color:var(--brand-soft)] hover:bg-[color:var(--surface-strong)] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--brand-soft)]"
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[color:var(--brand)]/10">
+                      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="var(--brand)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M3 21h18" />
+                        <path d="M5 21V7l7-4 7 4v14" />
+                        <path d="M9 21v-5h6v5" />
+                        <path d="M9 10h.01" />
+                        <path d="M15 10h.01" />
+                      </svg>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-[color:var(--foreground)] transition-colors duration-300 group-hover:text-[color:var(--brand)]">
+                        Church Office
+                      </p>
+                      <p className="mt-1 text-xs text-[color:var(--muted)]">
+                        1st Floor, Karama Building
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 text-[color:var(--brand-soft)]">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.1em]">
+                        Open map
+                      </span>
+                      <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6" />
+                      </svg>
+                    </div>
+                  </a>
                 </div>
-              </a>
+              </div>
             </StaggerItem>
 
             {/* Instagram */}
@@ -524,31 +639,56 @@ export default function Home() {
       </section>
 
       {/* ── footer ─────────────────────────── */}
-      <footer className="border-t border-[color:var(--line)]">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-5 py-10 text-center text-sm text-[color:var(--muted)] sm:flex-row sm:justify-between sm:px-8 sm:text-left">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/Logos/trinity-logo.svg"
-              alt="Trinity Fellowship"
-              width={28}
-              height={37}
-            />
+      <footer className="border-t border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.2),rgba(255,255,255,0))]">
+        <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-14">
+          <div className="grid gap-10 md:grid-cols-[1.3fr_1fr] md:gap-12">
             <div>
-              <p className="font-semibold text-[color:var(--brand)]">Trinity Fellowship Addis Ababa</p>
-              <p className="text-xs">Part of Sovereign Grace Churches</p>
+              <div className="flex items-center gap-3">
+                <Image
+                  src="/Logos/trinity-logo.svg"
+                  alt="Trinity Fellowship"
+                  width={30}
+                  height={40}
+                />
+                <div>
+                  <p className="text-lg font-semibold text-[color:var(--brand)]">
+                    Trinity Fellowship Addis Ababa
+                  </p>
+                  <p className="text-xs uppercase tracking-[0.12em] text-[color:var(--brand-soft)]">
+                    Part of Sovereign Grace Churches
+                  </p>
+                </div>
+              </div>
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-[color:var(--muted)]">
+                Worship with us in Sarbet on Sundays, or visit our church office during the week at
+                Karama Building.
+              </p>
             </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--brand-soft)]">
+                Quick Links
+              </p>
+              <nav className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-sm font-semibold text-[color:var(--muted)]">
+                {["About", "Schedule", "Children", "Beliefs", "College", "Visit"].map((label) => (
+                  <a
+                    key={label}
+                    href={`#${label.toLowerCase()}`}
+                    className="transition-colors hover:text-[color:var(--brand)]"
+                  >
+                    {label}
+                  </a>
+                ))}
+              </nav>
+            </div>
+
           </div>
-          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs font-semibold uppercase tracking-[0.1em]">
-            {["About", "Schedule", "Beliefs", "College", "Visit"].map((label) => (
-              <a
-                key={label}
-                href={`#${label.toLowerCase()}`}
-                className="transition-colors hover:text-[color:var(--brand)]"
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
+
+          <div className="mt-10 border-t border-[color:var(--line)] pt-5">
+            <p className="text-xs text-[color:var(--muted)]">
+              © {currentYear} Trinity Fellowship Addis Ababa. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
     </div>
