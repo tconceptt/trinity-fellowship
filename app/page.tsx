@@ -95,17 +95,11 @@ function HeroSection() {
           className="max-w-xl"
         >
           <h1 className="font-serif text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.05] text-[#1f3b53]">
-            Worship God.
-            <br />
-            Grow in Grace.
-            <br />
-            Bear Witness
-            <br />
-            to Christ.
+            A Gospel-Centered Community That Exists To Know God And Make Him Known.
           </h1>
 
           <p className="mt-6 max-w-md text-lg leading-relaxed text-[#586574]">
-            A gospel-centered community that exists to know God and make Him known.
+            Worship God. Grow In Grace. Bear Witness To Christ.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-4">
@@ -670,13 +664,22 @@ export default function Home() {
                 Quick Links
               </p>
               <nav className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-sm font-semibold text-[color:var(--muted)]">
-                {["About", "Schedule", "Children", "Beliefs", "College", "Visit"].map((label) => (
+                {[
+                    { label: "About", href: "/#about" },
+                    { label: "Pastors", href: "/pastors" },
+                    { label: "Schedule", href: "/#schedule" },
+                    { label: "Children", href: "/#children" },
+                    { label: "Beliefs", href: "/#beliefs" },
+                    { label: "College", href: "/#college" },
+                    { label: "Visit", href: "/#visit" },
+                    { label: "Members", href: "/members" },
+                  ].map((link) => (
                   <a
-                    key={label}
-                    href={`#${label.toLowerCase()}`}
+                    key={link.label}
+                    href={link.href}
                     className="transition-colors hover:text-[color:var(--brand)]"
                   >
-                    {label}
+                    {link.label}
                   </a>
                 ))}
               </nav>
