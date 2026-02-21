@@ -15,6 +15,7 @@ import {
   InfiniteScrollLoop,
 } from "./components/animations";
 import { Header } from "./components/header";
+import { useAuth } from "./lib/auth-context";
 
 /* ── data ───────────────────────────────────── */
 
@@ -117,7 +118,7 @@ function HeroSection() {
       {/* ── Mobile Image (Bottom) ── */}
       <div className="relative h-[45vh] w-full shrink-0 lg:hidden">
         <Image
-          src="/images/group-photo.jpeg"
+          src="/images/hero-image.jpg"
           alt="Worship gathering at Trinity Fellowship"
           fill
           sizes="100vw"
@@ -144,7 +145,7 @@ function HeroSection() {
       <div className="relative hidden h-auto w-[45%] lg:block">
         <div className="absolute inset-0 h-full w-full">
           <Image
-            src="/images/group-photo.jpeg"
+            src="/images/hero-image.jpg"
             alt="Worship gathering at Trinity Fellowship"
             fill
             className="object-cover object-center"
@@ -175,6 +176,7 @@ function HeroSection() {
 
 export default function Home() {
   const currentYear = new Date().getFullYear();
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen">
@@ -336,6 +338,17 @@ export default function Home() {
                 Parents can attend the main service with peace of mind, knowing their children are
                 cared for nearby in the same building.
               </p>
+            </ScrollReveal>
+            <ScrollReveal delay={0.35}>
+              <div className="relative mt-8 aspect-[4/3] overflow-hidden rounded-2xl">
+                <Image
+                  src="/images/children-ministry.jpg"
+                  alt="Children's ministry at Trinity Fellowship"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              </div>
             </ScrollReveal>
           </div>
 
@@ -574,17 +587,19 @@ export default function Home() {
           <ScrollReveal delay={0.4}>
             <div className="mt-12 text-center">
               <Link
-                href="/members"
+                href={user ? "/members/hub" : "/members"}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--brand)] px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-[color:var(--brand-soft)] hover:shadow-lg"
               >
-                Sign In as a Member
+                {user ? "Go to Members Area" : "Sign In as a Member"}
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="m9 18 6-6-6-6" />
                 </svg>
               </Link>
-              <p className="mt-4 text-sm text-[color:var(--muted)]">
-                Only registered members can access these features.
-              </p>
+              {!user && (
+                <p className="mt-4 text-sm text-[color:var(--muted)]">
+                  Only registered members can access these features.
+                </p>
+              )}
             </div>
           </ScrollReveal>
         </div>
