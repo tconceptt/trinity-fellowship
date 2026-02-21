@@ -191,10 +191,10 @@ export function StickyImageSection({
     offset: ["start start", "end end"],
   });
 
-  const textY = useTransform(scrollYProgress, [0, 0.6], ["0%", "-80%"]);
-  const smoothTextY = useSpring(textY, { stiffness: 100, damping: 30, restDelta: 0.001 });
-  const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const imgScale = useTransform(scrollYProgress, [0, 0.6], [1, 1.12]);
+  const textY = useTransform(scrollYProgress, [0, 0.85], ["0%", "-50%"]);
+  const smoothTextY = useSpring(textY, { stiffness: 60, damping: 40, restDelta: 0.001 });
+  const textOpacity = useTransform(scrollYProgress, [0, 0.35, 0.8], [1, 1, 0]);
+  const imgScale = useTransform(scrollYProgress, [0, 0.85], [1, 1.12]);
 
   return (
     <div ref={containerRef} style={{ height: `${scrollLength * 100}vh` }}>
