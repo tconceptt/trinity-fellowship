@@ -5,14 +5,33 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { createClient } from "@/app/lib/supabase/browser";
 import { Header } from "@/app/components/header";
-import { StaggerChildren, StaggerItem } from "@/app/components/animations";
 
 type Member = {
   id: string;
   full_name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
 };
+
+const ACCENT_PAIRS = [
+  ["bg-[#1f3b53]/10", "text-[#1f3b53]"],
+  ["bg-[#7f5b34]/10", "text-[#7f5b34]"],
+  ["bg-[#506d83]/10", "text-[#506d83]"],
+  ["bg-[#8b6f47]/10", "text-[#8b6f47]"],
+  ["bg-[#3d5a6e]/10", "text-[#3d5a6e]"],
+];
+
+function getInitials(name: string) {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0][0]?.toUpperCase() || "?";
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function getAccent(name: string) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return ACCENT_PAIRS[Math.abs(hash) % ACCENT_PAIRS.length];
+}
 
 export default function MembersPage() {
   const router = useRouter();
@@ -38,7 +57,6 @@ export default function MembersPage() {
 
       setUserEmail(user.email);
 
-      // Check if user is an active member
       const { data: memberCheck } = await supabase
         .from("members")
         .select("id")
@@ -51,7 +69,6 @@ export default function MembersPage() {
         return;
       }
 
-      // Fetch all active members (RLS enforces access)
       const { data, error } = await supabase
         .from("members")
         .select("id, full_name, email, phone")
@@ -75,11 +92,22 @@ export default function MembersPage() {
     const q = search.toLowerCase();
     return members.filter(
       (m) =>
-        m.full_name.toLowerCase().includes(q) ||
-        m.email.toLowerCase().includes(q) ||
+        m.full_name?.toLowerCase().includes(q) ||
+        (m.email && m.email.toLowerCase().includes(q)) ||
         (m.phone && m.phone.includes(q)),
     );
   }, [members, search]);
+
+  // Group by first letter of first name
+  const grouped = useMemo(() => {
+    const groups: Record<string, Member[]> = {};
+    for (const m of filtered) {
+      const letter = m.full_name.trim()[0]?.toUpperCase() || "#";
+      if (!groups[letter]) groups[letter] = [];
+      groups[letter].push(m);
+    }
+    return Object.entries(groups).sort(([a], [b]) => a.localeCompare(b));
+  }, [filtered]);
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -90,7 +118,7 @@ export default function MembersPage() {
     <div className="min-h-screen bg-[color:var(--background)]">
       <Header />
 
-      <main className="mx-auto max-w-7xl px-5 pt-28 pb-16 sm:px-8">
+      <main className="mx-auto max-w-5xl px-5 pt-28 pb-16 sm:px-8">
         {/* Loading */}
         {status === "loading" && (
           <div className="flex min-h-[50vh] items-center justify-center">
@@ -176,8 +204,8 @@ export default function MembersPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
           >
-            {/* Header row */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            {/* Header */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
                   Members Only
@@ -185,6 +213,9 @@ export default function MembersPage() {
                 <h1 className="mt-1 font-serif text-4xl text-[color:var(--foreground)] sm:text-5xl">
                   Church Directory
                 </h1>
+                <p className="mt-2 text-sm text-[color:var(--muted)]">
+                  {members.length} members
+                </p>
               </div>
               <button
                 onClick={handleSignOut}
@@ -195,17 +226,48 @@ export default function MembersPage() {
             </div>
 
             {/* Search */}
-            <div className="mt-8">
+            <div className="relative mt-8">
+              <svg
+                viewBox="0 0 24 24"
+                className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
               <input
                 type="text"
                 placeholder="Search by name, email, or phone..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full max-w-md rounded-lg border border-[color:var(--line)] bg-[color:var(--surface)] px-4 py-3 text-sm text-[color:var(--foreground)] outline-none transition-colors duration-200 placeholder:text-[color:var(--muted)]/50 focus:border-[color:var(--brand)] focus:ring-2 focus:ring-[color:var(--brand)]/20"
+                className="w-full rounded-full border border-[color:var(--line)] bg-[color:var(--surface)] py-3 pl-11 pr-4 text-sm text-[color:var(--foreground)] outline-none transition-colors duration-200 placeholder:text-[color:var(--muted)]/50 focus:border-[color:var(--brand)] focus:ring-2 focus:ring-[color:var(--brand)]/20"
               />
             </div>
 
-            {/* Grid */}
+            {/* Letter jump nav */}
+            {!search.trim() && (
+              <div className="mt-6 flex flex-wrap gap-1">
+                {grouped.map(([letter]) => (
+                  <button
+                    key={letter}
+                    onClick={() =>
+                      document
+                        .getElementById(`letter-${letter}`)
+                        ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                    }
+                    className="flex h-8 w-8 items-center justify-center rounded-full font-serif text-sm font-semibold text-[color:var(--muted)] transition-all duration-200 hover:bg-[color:var(--brand)]/10 hover:text-[color:var(--brand)]"
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Directory */}
             {filtered.length === 0 ? (
               <p className="mt-12 text-center text-[color:var(--muted)]">
                 {search.trim()
@@ -213,67 +275,140 @@ export default function MembersPage() {
                   : "No members found."}
               </p>
             ) : (
-              <StaggerChildren
-                className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-                staggerDelay={0.06}
-              >
-                {filtered.map((member) => (
-                  <StaggerItem key={member.id} direction="up">
-                    <div className="group rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:border-[color:var(--brand-soft)] hover:shadow-lg hover:shadow-[rgba(31,59,83,0.06)]">
-                      <p className="text-lg font-semibold text-[color:var(--foreground)] transition-colors duration-300 group-hover:text-[color:var(--brand)]">
-                        {member.full_name}
-                      </p>
-
-                      <div className="mt-3 space-y-2">
-                        <a
-                          href={`mailto:${member.email}`}
-                          className="flex items-center gap-2 text-sm text-[color:var(--muted)] transition-colors hover:text-[color:var(--brand)]"
-                        >
-                          <svg
-                            viewBox="0 0 24 24"
-                            className="h-4 w-4 shrink-0"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <rect
-                              width="20"
-                              height="16"
-                              x="2"
-                              y="4"
-                              rx="2"
-                            />
-                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                          </svg>
-                          {member.email}
-                        </a>
-
-                        {member.phone && (
-                          <a
-                            href={`tel:${member.phone}`}
-                            className="flex items-center gap-2 text-sm text-[color:var(--muted)] transition-colors hover:text-[color:var(--brand)]"
-                          >
-                            <svg
-                              viewBox="0 0 24 24"
-                              className="h-4 w-4 shrink-0"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.8"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                            </svg>
-                            {member.phone}
-                          </a>
-                        )}
-                      </div>
+              <div className="mt-8 space-y-10">
+                {grouped.map(([letter, groupMembers]) => (
+                  <section key={letter} id={`letter-${letter}`} className="scroll-mt-28">
+                    {/* Letter anchor */}
+                    <div className="sticky top-24 z-10 -mx-2 mb-1 flex items-center gap-3 bg-[color:var(--background)]/95 px-2 py-2 backdrop-blur-sm">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[color:var(--brand)] font-serif text-base font-bold text-white">
+                        {letter}
+                      </span>
+                      <div className="h-px flex-1 bg-[color:var(--line)]" />
+                      <span className="text-xs tabular-nums text-[color:var(--muted)]">
+                        {groupMembers.length}
+                      </span>
                     </div>
-                  </StaggerItem>
+
+                    {/* Members */}
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {groupMembers.map((member) => {
+                        const [bg, fg] = getAccent(member.full_name);
+                        return (
+                          <div
+                            key={member.id}
+                            className="group flex items-center gap-3.5 rounded-xl px-3 py-3 transition-colors duration-200 hover:bg-[color:var(--surface)]"
+                          >
+                            {/* Avatar */}
+                            <div
+                              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-serif text-sm font-bold ${bg} ${fg}`}
+                            >
+                              {getInitials(member.full_name)}
+                            </div>
+
+                            {/* Info */}
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-[15px] font-semibold text-[color:var(--foreground)] transition-colors duration-200 group-hover:text-[color:var(--brand)]">
+                                {member.full_name}
+                              </p>
+                              {/* Mobile: tappable contact links */}
+                              <div className="mt-0.5 flex items-center gap-3 sm:hidden">
+                                {member.email && (
+                                  <a
+                                    href={`mailto:${member.email}`}
+                                    className="inline-flex items-center gap-1 text-xs text-[color:var(--muted)] active:text-[color:var(--brand)]"
+                                  >
+                                    <svg
+                                      viewBox="0 0 24 24"
+                                      className="h-3 w-3 shrink-0"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    >
+                                      <rect width="20" height="16" x="2" y="4" rx="2" />
+                                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                    </svg>
+                                    <span className="truncate">{member.email}</span>
+                                  </a>
+                                )}
+                                {member.phone && (
+                                  <a
+                                    href={`tel:${member.phone}`}
+                                    className="inline-flex items-center gap-1 text-xs text-[color:var(--muted)] active:text-[color:var(--brand)]"
+                                  >
+                                    <svg
+                                      viewBox="0 0 24 24"
+                                      className="h-3 w-3 shrink-0"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    >
+                                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                    </svg>
+                                    {member.phone}
+                                  </a>
+                                )}
+                              </div>
+                              {/* Desktop: static email text */}
+                              {member.email && (
+                                <p className="hidden truncate text-xs text-[color:var(--muted)] sm:block">
+                                  {member.email}
+                                </p>
+                              )}
+                            </div>
+
+                            {/* Desktop: hover-reveal action icons */}
+                            <div className="hidden shrink-0 items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:flex">
+                              {member.email && (
+                                <a
+                                  href={`mailto:${member.email}`}
+                                  className="flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--muted)] transition-colors duration-200 hover:bg-[color:var(--brand)]/10 hover:text-[color:var(--brand)]"
+                                  title={`Email ${member.full_name}`}
+                                >
+                                  <svg
+                                    viewBox="0 0 24 24"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <rect width="20" height="16" x="2" y="4" rx="2" />
+                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                  </svg>
+                                </a>
+                              )}
+                              {member.phone && (
+                                <a
+                                  href={`tel:${member.phone}`}
+                                  className="flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--muted)] transition-colors duration-200 hover:bg-[color:var(--brand)]/10 hover:text-[color:var(--brand)]"
+                                  title={`Call ${member.full_name}`}
+                                >
+                                  <svg
+                                    viewBox="0 0 24 24"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                  </svg>
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </section>
                 ))}
-              </StaggerChildren>
+              </div>
             )}
           </motion.div>
         )}

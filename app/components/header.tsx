@@ -62,7 +62,7 @@ export function Header() {
             : "border-transparent bg-transparent"
         }`}
       >
-        <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-5 py-4 sm:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 md:grid md:grid-cols-[1fr_auto_1fr]">
           {/* Logo sits outside the nav capsule */}
           <a href="#" aria-label="Go to top" className="justify-self-start">
             <div className="flex items-center gap-3">
