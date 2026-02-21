@@ -20,7 +20,8 @@ export async function POST(request: Request) {
     .eq("is_active", true)
     .single();
 
-  const firstName = data?.full_name?.split(" ")[0] ?? null;
+  const fullName = data?.full_name ?? null;
+  const firstName = fullName?.split(" ")[0] ?? null;
 
-  return NextResponse.json({ firstName });
+  return NextResponse.json({ firstName, fullName });
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { createClient } from "@/app/lib/supabase/browser";
 
@@ -11,37 +12,37 @@ type SignInFormProps = {
 
 export function SignInForm({ compact = false, onSuccess }: SignInFormProps) {
   const supabase = createClient();
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"form" | "success" | "error">("form");
+  const [otpCode, setOtpCode] = useState("");
+  const [status, setStatus] = useState<"form" | "otp" | "error">("form");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [firstName, setFirstName] = useState<string | null>(null);
+  const [fullName, setFullName] = useState<string | null>(null);
+  const otpInputRef = useRef<HTMLInputElement>(null);
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleEmailSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setErrorMsg("");
 
-    // Look up member name before sending OTP
     try {
       const res = await fetch("/api/member-lookup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      const { firstName: name } = await res.json();
-      setFirstName(name);
+      const data = await res.json();
+      setFirstName(data.firstName);
+      setFullName(data.fullName);
     } catch {
       setFirstName(null);
+      setFullName(null);
     }
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    const { error } = await supabase.auth.signInWithOtp({ email });
 
     setLoading(false);
 
@@ -49,12 +50,47 @@ export function SignInForm({ compact = false, onSuccess }: SignInFormProps) {
       setStatus("error");
       setErrorMsg(error.message);
     } else {
-      setStatus("success");
-      onSuccess?.();
+      setStatus("otp");
+      setTimeout(() => otpInputRef.current?.focus(), 100);
     }
   }
 
-  if (status === "success") {
+  async function handleResend() {
+    setLoading(true);
+    setErrorMsg("");
+    const { error } = await supabase.auth.signInWithOtp({ email });
+    setLoading(false);
+    if (error) {
+      setErrorMsg(error.message);
+    }
+  }
+
+  async function handleOtpSubmit(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg("");
+
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: otpCode,
+      type: "email",
+    });
+
+    if (error) {
+      setLoading(false);
+      setErrorMsg(error.message);
+      return;
+    }
+
+    if (fullName) {
+      await supabase.auth.updateUser({ data: { full_name: fullName } });
+    }
+
+    onSuccess?.();
+    router.replace("/members/hub");
+  }
+
+  if (status === "otp") {
     const content = (
       <div className={compact ? "text-center" : "mt-8 text-center"}>
         <div
@@ -88,28 +124,96 @@ export function SignInForm({ compact = false, onSuccess }: SignInFormProps) {
             compact ? "mt-1 text-xs" : "mt-2 text-sm"
           }`}
         >
-          {firstName
-            ? <>Hi {firstName}, we sent a sign-in link to your email.</>
-            : <>We sent a login link to <strong>{email}</strong>.</>}
+          {firstName ? (
+            <>Hi {firstName}, enter the code we sent to your email.</>
+          ) : (
+            <>
+              Enter the code sent to <strong>{email}</strong>.
+            </>
+          )}
         </p>
-        <button
-          onClick={() => setStatus("form")}
-          className={`font-semibold text-[color:var(--brand)] transition-colors hover:text-[color:var(--brand-soft)] ${
-            compact ? "mt-3 text-xs" : "mt-6 text-sm"
+
+        <form onSubmit={handleOtpSubmit} className={compact ? "mt-3" : "mt-6"}>
+          <input
+            ref={otpInputRef}
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={8}
+            required
+            value={otpCode}
+            onChange={(e) =>
+              setOtpCode(e.target.value.replace(/[^0-9]/g, ""))
+            }
+            placeholder="00000000"
+            className={`mx-auto block w-52 rounded-lg border border-[color:var(--line)] bg-[color:var(--background)] text-center font-mono tracking-[0.3em] text-[color:var(--foreground)] outline-none transition-colors duration-200 placeholder:text-[color:var(--muted)]/30 focus:border-[color:var(--brand)] focus:ring-2 focus:ring-[color:var(--brand)]/20 ${
+              compact ? "px-3 py-2 text-sm" : "px-4 py-3 text-lg"
+            }`}
+          />
+
+          {errorMsg && (
+            <p
+              className={`text-red-600 ${
+                compact ? "mt-2 text-xs" : "mt-3 text-sm"
+              }`}
+            >
+              {errorMsg}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading || otpCode.length < 8}
+            className={`mt-4 w-full rounded-full bg-[color:var(--brand)] font-semibold text-white transition-all duration-300 hover:bg-[color:var(--brand-soft)] hover:shadow-md disabled:opacity-60 ${
+              compact ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm"
+            }`}
+          >
+            {loading ? "Verifying..." : "Verify Code"}
+          </button>
+        </form>
+
+        <div
+          className={`flex items-center justify-center gap-3 ${
+            compact ? "mt-3 text-xs" : "mt-5 text-sm"
           }`}
         >
-          Try a different email
-        </button>
+          <button
+            onClick={handleResend}
+            disabled={loading}
+            className="font-semibold text-[color:var(--brand)] transition-colors hover:text-[color:var(--brand-soft)] disabled:opacity-60"
+          >
+            Resend code
+          </button>
+          <span className="text-[color:var(--muted)]">&middot;</span>
+          <button
+            onClick={() => {
+              setStatus("form");
+              setOtpCode("");
+              setErrorMsg("");
+            }}
+            className="font-semibold text-[color:var(--brand)] transition-colors hover:text-[color:var(--brand-soft)]"
+          >
+            Different email
+          </button>
+        </div>
       </div>
     );
 
-    return compact ? content : <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>{content}</motion.div>;
+    return compact ? (
+      content
+    ) : (
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+        {content}
+      </motion.div>
+    );
   }
 
   if (status === "error") {
     const content = (
       <div className={compact ? "text-center" : "mt-8 text-center"}>
-        <p className={`text-red-600 ${compact ? "text-xs" : "text-sm"}`}>{errorMsg}</p>
+        <p className={`text-red-600 ${compact ? "text-xs" : "text-sm"}`}>
+          {errorMsg}
+        </p>
         <button
           onClick={() => {
             setStatus("form");
@@ -124,11 +228,20 @@ export function SignInForm({ compact = false, onSuccess }: SignInFormProps) {
       </div>
     );
 
-    return compact ? content : <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>{content}</motion.div>;
+    return compact ? (
+      content
+    ) : (
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+        {content}
+      </motion.div>
+    );
   }
 
   return (
-    <form onSubmit={handleSubmit} className={compact ? "space-y-3" : "mt-8 space-y-4"}>
+    <form
+      onSubmit={handleEmailSubmit}
+      className={compact ? "space-y-3" : "mt-8 space-y-4"}
+    >
       <div>
         <label
           htmlFor={compact ? "email-compact" : "email"}
@@ -157,7 +270,7 @@ export function SignInForm({ compact = false, onSuccess }: SignInFormProps) {
           compact ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm"
         }`}
       >
-        {loading ? "Sending..." : "Send Login Link"}
+        {loading ? "Sending..." : "Send Login Code"}
       </button>
     </form>
   );

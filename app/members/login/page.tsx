@@ -33,27 +33,10 @@ function LoginForm() {
           Member Login
         </h1>
         <p className="mt-2 text-center text-sm text-[color:var(--muted)]">
-          Enter your email to receive a login link.
+          Enter your email to receive a login code.
         </p>
 
-        {errorType === "different_browser" ? (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-8 text-center"
-          >
-            <p className="text-sm text-red-600">
-              It looks like you opened the login link in a different browser or
-              app than where you requested it.
-            </p>
-            <p className="mt-2 text-sm text-[color:var(--muted)]">
-              Please request a new link below and open it in this browser.
-            </p>
-            <div className="mt-4">
-              <SignInForm />
-            </div>
-          </motion.div>
-        ) : errorType === "auth" ? (
+        {errorType ? (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
