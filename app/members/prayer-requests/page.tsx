@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/app/lib/supabase/browser";
 import { getInitials, getAccent } from "@/app/lib/avatar-utils";
@@ -10,6 +11,7 @@ import { Header } from "@/app/components/header";
 type CurrentMember = {
   id: string;
   role: string;
+  full_name?: string;
 };
 
 type PrayerRequest = {
@@ -73,7 +75,7 @@ export default function PrayerRequestsPage() {
 
       const { data: member } = await supabase
         .from("members")
-        .select("id, role")
+        .select("id, role, full_name")
         .eq("email", user.email)
         .eq("is_active", true)
         .single();
@@ -236,6 +238,17 @@ export default function PrayerRequestsPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
           >
+            {/* Back link */}
+            <Link
+              href="/members/hub"
+              className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--muted)] transition-colors duration-200 hover:text-[color:var(--brand)]"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+              Members Area
+            </Link>
+
             {/* Hero section */}
             <div className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] px-6 py-8 text-center sm:px-10 sm:py-10">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[color:var(--brand)]/10">
@@ -255,8 +268,9 @@ export default function PrayerRequestsPage() {
                 Prayer Requests
               </h1>
               <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[color:var(--muted)]">
-                This is a safe space to share what&apos;s on your heart. Your
-                church family is here to lift you up in prayer.
+                {currentMember?.full_name
+                  ? <>{currentMember.full_name.split(" ")[0]}, this is a safe space to share what&apos;s on your heart. Your church family is here to lift you up in prayer.</>
+                  : <>This is a safe space to share what&apos;s on your heart. Your church family is here to lift you up in prayer.</>}
               </p>
 
               {/* Bible verse */}

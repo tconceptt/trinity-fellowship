@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { createClient } from "@/app/lib/supabase/browser";
 import { getInitials, getAccent } from "@/app/lib/avatar-utils";
@@ -24,6 +25,7 @@ export default function MembersPage() {
     "loading" | "not-member" | "error" | "success"
   >("loading");
   const [userEmail, setUserEmail] = useState("");
+  const [userFirstName, setUserFirstName] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -40,7 +42,7 @@ export default function MembersPage() {
 
       const { data: memberCheck } = await supabase
         .from("members")
-        .select("id")
+        .select("id, full_name")
         .eq("email", user.email)
         .eq("is_active", true)
         .single();
@@ -49,6 +51,8 @@ export default function MembersPage() {
         setStatus("not-member");
         return;
       }
+
+      setUserFirstName(memberCheck.full_name?.split(" ")[0] ?? null);
 
       const { data, error } = await supabase
         .from("members")
@@ -185,6 +189,17 @@ export default function MembersPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4 }}
           >
+            {/* Back link */}
+            <Link
+              href="/members/hub"
+              className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--muted)] transition-colors duration-200 hover:text-[color:var(--brand)]"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+              Members Area
+            </Link>
+
             {/* Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -195,7 +210,9 @@ export default function MembersPage() {
                   Church Directory
                 </h1>
                 <p className="mt-2 text-sm text-[color:var(--muted)]">
-                  {members.length} members
+                  {userFirstName
+                    ? `Welcome, ${userFirstName}. ${members.length} members in our fellowship.`
+                    : `${members.length} members`}
                 </p>
               </div>
               <button

@@ -16,11 +16,25 @@ export function SignInForm({ compact = false, onSuccess }: SignInFormProps) {
   const [status, setStatus] = useState<"form" | "success" | "error">("form");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [firstName, setFirstName] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setErrorMsg("");
+
+    // Look up member name before sending OTP
+    try {
+      const res = await fetch("/api/member-lookup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const { firstName: name } = await res.json();
+      setFirstName(name);
+    } catch {
+      setFirstName(null);
+    }
 
     const { error } = await supabase.auth.signInWithOtp({
       email,
@@ -74,7 +88,9 @@ export function SignInForm({ compact = false, onSuccess }: SignInFormProps) {
             compact ? "mt-1 text-xs" : "mt-2 text-sm"
           }`}
         >
-          We sent a login link to <strong>{email}</strong>.
+          {firstName
+            ? <>Hi {firstName}, we sent a sign-in link to your email.</>
+            : <>We sent a login link to <strong>{email}</strong>.</>}
         </p>
         <button
           onClick={() => setStatus("form")}

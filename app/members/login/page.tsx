@@ -15,7 +15,7 @@ function LoginForm() {
   // If already authenticated, redirect to /members
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) router.replace("/members");
+      if (user) router.replace("/members/hub");
     });
   }, [supabase, router]);
 
