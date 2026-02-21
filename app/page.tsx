@@ -89,12 +89,12 @@ function HeroSection() {
   return (
     <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-[#f5f0e8] lg:flex-row">
       {/* ── Content (Left/Top on mobile) ── */}
-      <div className="relative z-10 flex flex-1 flex-col justify-center px-6 pt-24 pb-12 sm:px-12 lg:w-[55%] lg:px-20 lg:py-0 xl:px-24">
+      <div className="relative z-10 flex flex-1 flex-col justify-end px-6 pt-24 pb-12 sm:px-12 lg:w-[50%] lg:justify-center lg:px-16 lg:py-0 xl:px-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-xl"
+          className="max-w-xl lg:max-w-2xl"
         >
           <h1 className="font-serif text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.05] text-[#1f3b53]">
             A Gospel-Centered Community That Exists To Know God And Make Him Known.
@@ -142,7 +142,7 @@ function HeroSection() {
       </div>
 
       {/* ── Desktop Image (Right) ── */}
-      <div className="relative hidden h-auto w-[45%] lg:block">
+      <div className="relative hidden h-auto w-[50%] lg:block">
         <div className="absolute inset-0 h-full w-full">
           <Image
             src="/images/hero-image.jpg"
@@ -315,40 +315,48 @@ export default function Home() {
 
       <SectionDivider className="mx-auto max-w-7xl px-5 sm:px-8" />
 
-      {/* ── children ministry ─────────────── */}
+      {/* ── children ministry hero ─────────── */}
+      <section className="relative flex h-[85vh] items-end overflow-hidden sm:h-[90vh]">
+        <Image
+          src="/images/children-ministry.jpg"
+          alt="Children's ministry at Trinity Fellowship"
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(14,33,48,0.82)_0%,rgba(14,33,48,0.4)_40%,rgba(14,33,48,0.15)_100%)]" />
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-16 sm:px-10 sm:pb-20">
+          <ScrollReveal>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9b89a]">
+              Family Ministry
+            </p>
+          </ScrollReveal>
+          <TextReveal delay={0.1}>
+            <h2
+              className="mt-3 text-4xl leading-tight text-[#fbf4e8] sm:text-5xl lg:text-6xl"
+              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3)" }}
+            >
+              Children&apos;s Ministry
+            </h2>
+          </TextReveal>
+        </div>
+      </section>
+
+      {/* ── children ministry details ────────── */}
       <section id="children" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
         <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
           <div>
             <ScrollReveal>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
-                Family Ministry
-              </p>
-            </ScrollReveal>
-            <TextReveal delay={0.1}>
-              <h2 className="mt-3 text-4xl sm:text-5xl lg:text-6xl">Children&apos;s Ministry</h2>
-            </TextReveal>
-            <ScrollReveal delay={0.2}>
               <p className="mt-5 max-w-2xl text-lg leading-relaxed text-[color:var(--muted)]">
                 Every Sunday from 11:00 AM to 12:00 PM, children ages 4 to 12 are welcomed into a
                 safe and joyful space to learn the Scriptures and get to know Jesus.
               </p>
             </ScrollReveal>
-            <ScrollReveal delay={0.28}>
+            <ScrollReveal delay={0.12}>
               <p className="mt-4 max-w-2xl text-[color:var(--muted)]">
                 Parents can attend the main service with peace of mind, knowing their children are
                 cared for nearby in the same building.
               </p>
-            </ScrollReveal>
-            <ScrollReveal delay={0.35}>
-              <div className="relative mt-8 aspect-[4/3] overflow-hidden rounded-2xl">
-                <Image
-                  src="/images/children-ministry.jpg"
-                  alt="Children's ministry at Trinity Fellowship"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
-                />
-              </div>
             </ScrollReveal>
           </div>
 
