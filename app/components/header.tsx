@@ -239,7 +239,7 @@ export function Header() {
                 <>
                   <button
                     onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
-                    className="rounded-full border border-[color:var(--brand)]/25 px-4 py-1.5 text-[13px] font-bold uppercase tracking-[0.1em] text-[color:var(--brand)] transition-all duration-300 hover:border-[color:var(--brand)]/50 hover:bg-[color:var(--brand)]/6"
+                    className="rounded-full bg-[color:var(--brand)] px-5 py-2 text-[13px] font-bold uppercase tracking-[0.1em] text-white shadow-sm transition-all duration-300 hover:bg-[color:var(--brand-soft)] hover:shadow-md"
                   >
                     Sign In
                   </button>

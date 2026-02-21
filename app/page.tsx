@@ -8,6 +8,7 @@ import {
   StaggerChildren,
   StaggerItem,
   ParallaxImage,
+  StickyImageSection,
   TextReveal,
   SectionDivider,
   ScrollProgress,
@@ -108,12 +109,6 @@ function HeroSection() {
               className="inline-flex items-center justify-center rounded-full bg-[#1f3b53] px-8 py-4 text-sm font-semibold text-white transition-transform duration-200 hover:scale-105 hover:shadow-lg"
             >
               Join Us Sunday
-            </a>
-            <a
-              href="#about"
-              className="inline-flex items-center justify-center rounded-full bg-[#e6dfd3] px-8 py-4 text-sm font-semibold text-[#1f3b53] transition-transform duration-200 hover:scale-105 hover:bg-[#dcd4c5]"
-            >
-              Learn More
             </a>
           </div>
         </motion.div>
@@ -236,29 +231,32 @@ export default function Home() {
       </section>
 
       {/* ── cityscape parallax ─────────────── */}
-      <ParallaxImage className="min-h-[80vh] sm:min-h-[92vh]" speed={0.3}>
+      <StickyImageSection
+        overlay={
+          <div className="mx-auto max-w-7xl px-6 sm:px-10">
+            <blockquote
+              className="max-w-3xl text-3xl leading-tight text-[#fbf4e8] sm:text-5xl lg:text-6xl"
+              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3)" }}
+            >
+              &ldquo;By his Word and Spirit, Christ is building his church
+              <span className="text-[#c9b89a]">
+                {" "}in every tribe, tongue, and nation.
+              </span>
+              &rdquo;
+            </blockquote>
+          </div>
+        }
+      >
         <Image
-          src="/images/addis-city.jpg"
+          src="/images/addis-landscape.jpg"
           alt="Addis Ababa cityscape"
           fill
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(14,33,48,0.72)_14%,rgba(14,33,48,0.25)_50%,rgba(14,33,48,0.72)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(14,33,48,0.72)_14%,rgba(14,33,48,0.35)_50%,rgba(14,33,48,0.72)_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(255,255,255,0.2),transparent_40%)]" />
-      </ParallaxImage>
-      <div className="relative z-10 mx-auto -mt-[60vh] flex min-h-[60vh] max-w-7xl items-center px-6 sm:-mt-[70vh] sm:min-h-[70vh] sm:px-10">
-        <ScrollReveal direction="up" distance={50}>
-          <blockquote className="max-w-3xl text-3xl leading-tight text-[#fbf4e8] sm:text-5xl lg:text-6xl">
-            &ldquo;By his Word and Spirit, Christ is building his church
-            <span className="text-[#c9b89a]">
-              {" "}in every tribe, tongue, and nation.
-            </span>
-            &rdquo;
-          </blockquote>
-        </ScrollReveal>
-      </div>
-      <div className="h-[20vh] sm:h-[22vh]" />
+      </StickyImageSection>
 
       <SectionDivider className="mx-auto max-w-7xl px-5 sm:px-8" />
 
@@ -481,6 +479,112 @@ export default function Home() {
               >
                 Visit College Website
               </a>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      <SectionDivider className="mx-auto max-w-7xl px-5 sm:px-8" />
+
+      {/* ── members CTA ──────────────────── */}
+      <section className="relative overflow-hidden py-20 sm:py-28">
+        {/* subtle background texture */}
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(31,59,83,0.04)_0%,transparent_50%,rgba(127,91,52,0.04)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_50%,rgba(31,59,83,0.06),transparent_60%)]" />
+
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="text-center">
+            <ScrollReveal>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
+                Members
+              </p>
+            </ScrollReveal>
+            <TextReveal delay={0.1}>
+              <h2 className="mt-3 text-4xl sm:text-5xl lg:text-6xl">
+                Stay Connected
+              </h2>
+            </TextReveal>
+            <ScrollReveal delay={0.2}>
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-[color:var(--muted)]">
+                As a member, you can pray for one another, share prayer requests, and stay connected through the members directory.
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <StaggerChildren className="mx-auto mt-14 grid max-w-4xl gap-5 sm:grid-cols-3 sm:gap-6" staggerDelay={0.12}>
+            {/* Pray for Others */}
+            <StaggerItem direction="up">
+              <div className="group relative flex flex-col items-center rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-8 text-center transition-all duration-500 hover:border-[color:var(--brand-soft)] hover:shadow-xl hover:shadow-[rgba(31,59,83,0.08)]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[color:var(--brand)]/10 transition-transform duration-500 group-hover:scale-110">
+                  <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="var(--brand)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                </div>
+                <h3 className="mt-5 text-xl font-semibold text-[color:var(--foreground)]">
+                  Pray for Others
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
+                  See what your church family needs prayer for and lift them up before the Lord.
+                </p>
+              </div>
+            </StaggerItem>
+
+            {/* Get Prayed For */}
+            <StaggerItem direction="up">
+              <div className="group relative flex flex-col items-center rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-8 text-center transition-all duration-500 hover:border-[color:var(--brand-soft)] hover:shadow-xl hover:shadow-[rgba(31,59,83,0.08)]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[color:var(--accent)]/10 transition-transform duration-500 group-hover:scale-110">
+                  <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="var(--accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M17.5 21H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+                    <path d="M22 10a4.5 4.5 0 0 0-7.29-3.5" />
+                    <path d="M8 12v4" />
+                    <path d="M8 8v.01" />
+                  </svg>
+                </div>
+                <h3 className="mt-5 text-xl font-semibold text-[color:var(--foreground)]">
+                  Share Requests
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
+                  Submit prayer requests to be shared with the church or your pastors privately.
+                </p>
+              </div>
+            </StaggerItem>
+
+            {/* Members Directory */}
+            <StaggerItem direction="up">
+              <div className="group relative flex flex-col items-center rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-8 text-center transition-all duration-500 hover:border-[color:var(--brand-soft)] hover:shadow-xl hover:shadow-[rgba(31,59,83,0.08)]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[color:var(--brand-soft)]/10 transition-transform duration-500 group-hover:scale-110">
+                  <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="var(--brand-soft)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </div>
+                <h3 className="mt-5 text-xl font-semibold text-[color:var(--foreground)]">
+                  Members Directory
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
+                  Find and connect with fellow members through the church directory.
+                </p>
+              </div>
+            </StaggerItem>
+          </StaggerChildren>
+
+          {/* CTA */}
+          <ScrollReveal delay={0.4}>
+            <div className="mt-12 text-center">
+              <Link
+                href="/members"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--brand)] px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-[color:var(--brand-soft)] hover:shadow-lg"
+              >
+                Sign In as a Member
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </Link>
+              <p className="mt-4 text-sm text-[color:var(--muted)]">
+                Only registered members can access these features.
+              </p>
             </div>
           </ScrollReveal>
         </div>

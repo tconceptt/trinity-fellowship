@@ -170,6 +170,53 @@ export function ParallaxImage({
 }
 
 /* ──────────────────────────────────────────────
+   StickyImageSection – image stays pinned while
+   overlay text scrolls away, then image scrolls
+   out naturally
+   ────────────────────────────────────────────── */
+export function StickyImageSection({
+  children,
+  overlay,
+  className = "",
+  scrollLength = 1.35,
+}: {
+  children: ReactNode;
+  overlay: ReactNode;
+  className?: string;
+  scrollLength?: number;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const textY = useTransform(scrollYProgress, [0, 0.6], ["0%", "-80%"]);
+  const smoothTextY = useSpring(textY, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const imgScale = useTransform(scrollYProgress, [0, 0.6], [1, 1.12]);
+
+  return (
+    <div ref={containerRef} style={{ height: `${scrollLength * 100}vh` }}>
+      <div className={`sticky top-0 h-screen overflow-hidden ${className}`}>
+        {/* background image layer */}
+        <motion.div style={{ scale: imgScale }} className="absolute inset-0">
+          {children}
+        </motion.div>
+
+        {/* text overlay */}
+        <motion.div
+          style={{ y: smoothTextY, opacity: textOpacity }}
+          className="relative z-10 flex h-full items-center"
+        >
+          {overlay}
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+/* ──────────────────────────────────────────────
    TextRevealLine – reveals text line by line
    with a mask/clip effect
    ────────────────────────────────────────────── */
