@@ -31,7 +31,6 @@ export async function GET(request: Request) {
     | "email"
     | null;
 
-  // Use x-forwarded-host for correct redirect behind Vercel proxy
   const forwardedHost = request.headers.get("x-forwarded-host");
   const redirectBase =
     forwardedHost && process.env.NODE_ENV !== "development"
@@ -47,6 +46,13 @@ export async function GET(request: Request) {
       await enrichUserMetadata(supabase);
       return NextResponse.redirect(`${redirectBase}/members/hub`);
     }
+    // PKCE exchange failed — almost always means the code verifier cookie
+    // is missing (link opened in a different browser/app than where sign-in
+    // was initiated).
+    console.error("[auth/callback] Code exchange failed:", error.message);
+    return NextResponse.redirect(
+      `${redirectBase}/members/login?error=different_browser`,
+    );
   }
 
   // Token-hash flow – magic link opened in a different browser/context
@@ -59,6 +65,7 @@ export async function GET(request: Request) {
       await enrichUserMetadata(supabase);
       return NextResponse.redirect(`${redirectBase}/members/hub`);
     }
+    console.error("[auth/callback] OTP verification failed:", error.message);
   }
 
   return NextResponse.redirect(`${redirectBase}/members/login?error=auth`);

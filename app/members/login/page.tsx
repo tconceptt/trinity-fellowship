@@ -19,7 +19,7 @@ function LoginForm() {
     });
   }, [supabase, router]);
 
-  const hasError = searchParams.get("error") === "auth";
+  const errorType = searchParams.get("error");
 
   return (
     <motion.div
@@ -36,7 +36,24 @@ function LoginForm() {
           Enter your email to receive a login link.
         </p>
 
-        {hasError ? (
+        {errorType === "different_browser" ? (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8 text-center"
+          >
+            <p className="text-sm text-red-600">
+              It looks like you opened the login link in a different browser or
+              app than where you requested it.
+            </p>
+            <p className="mt-2 text-sm text-[color:var(--muted)]">
+              Please request a new link below and open it in this browser.
+            </p>
+            <div className="mt-4">
+              <SignInForm />
+            </div>
+          </motion.div>
+        ) : errorType === "auth" ? (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
