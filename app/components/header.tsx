@@ -23,7 +23,7 @@ export function Header() {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const authDropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, memberName, memberFirstName } = useAuth();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const isScrolled = latest > 48;
@@ -58,7 +58,7 @@ export function Header() {
     router.push("/");
   };
 
-  const displayName = user?.user_metadata?.full_name || user?.email || "";
+  const displayName = memberName || user?.user_metadata?.full_name || user?.email || "";
   const initials = displayName ? getInitials(displayName) : "?";
   const accent = displayName ? getAccent(displayName) : ["bg-[#1f3b53]/10", "text-[#1f3b53]"] as const;
 
@@ -73,7 +73,7 @@ export function Header() {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 md:grid md:grid-cols-[1fr_auto_1fr]">
           {/* Logo */}
-          <a href="#" aria-label="Go to top" className="justify-self-start">
+          <a href="/" aria-label="Go to homepage" className="justify-self-start">
             <div className="flex items-center gap-3">
               <Image
                 src="/Logos/trinity-logo.svg"
@@ -168,10 +168,19 @@ export function Header() {
                 <>
                   <button
                     onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
-                    className={`flex h-9 w-9 items-center justify-center rounded-full font-serif text-xs font-bold transition-all duration-200 hover:ring-2 hover:ring-[color:var(--brand)]/20 ${accent[0]} ${accent[1]}`}
+                    className="flex items-center gap-2 rounded-full border border-[color:var(--line)] bg-[color:var(--surface)]/60 py-1 pl-1 pr-3.5 backdrop-blur-md transition-all duration-200 hover:border-[color:var(--brand)]/30 hover:shadow-sm"
                     aria-label="User menu"
                   >
-                    {initials}
+                    <span
+                      className={`flex h-7 w-7 items-center justify-center rounded-full font-serif text-[11px] font-bold ${accent[0]} ${accent[1]}`}
+                    >
+                      {initials}
+                    </span>
+                    {memberFirstName && (
+                      <span className="text-[13px] font-semibold text-[color:var(--foreground)]">
+                        {memberFirstName}
+                      </span>
+                    )}
                   </button>
 
                   <AnimatePresence>
@@ -194,9 +203,22 @@ export function Header() {
 
                           {/* Links */}
                           <a
-                            href="/members"
+                            href="/members/hub"
                             onClick={() => setAuthDropdownOpen(false)}
                             className="mt-1 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-semibold text-[color:var(--muted)] transition-all duration-200 hover:bg-[color:var(--brand)]/6 hover:text-[color:var(--brand)]"
+                          >
+                            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <rect x="3" y="3" width="7" height="7" rx="1" />
+                              <rect x="14" y="3" width="7" height="7" rx="1" />
+                              <rect x="3" y="14" width="7" height="7" rx="1" />
+                              <rect x="14" y="14" width="7" height="7" rx="1" />
+                            </svg>
+                            Members Area
+                          </a>
+                          <a
+                            href="/members"
+                            onClick={() => setAuthDropdownOpen(false)}
+                            className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-semibold text-[color:var(--muted)] transition-all duration-200 hover:bg-[color:var(--brand)]/6 hover:text-[color:var(--brand)]"
                           >
                             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                               <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />

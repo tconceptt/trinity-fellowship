@@ -11,7 +11,7 @@ export function MobileNav() {
   const [open, setOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const router = useRouter();
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, memberName, memberFirstName } = useAuth();
 
   const handleSignOut = async () => {
     setOpen(false);
@@ -19,7 +19,7 @@ export function MobileNav() {
     router.push("/");
   };
 
-  const displayName = user?.user_metadata?.full_name || user?.email || "";
+  const displayName = memberName || user?.user_metadata?.full_name || user?.email || "";
   const initials = displayName ? getInitials(displayName) : "?";
   const accent = displayName ? getAccent(displayName) : ["bg-[#1f3b53]/10", "text-[#1f3b53]"] as const;
 
@@ -191,16 +191,44 @@ export function MobileNav() {
                       >
                         {initials}
                       </div>
-                      <p className="min-w-0 truncate text-sm text-[color:var(--muted)]">
-                        {user.email}
-                      </p>
+                      <div className="min-w-0">
+                        {memberName && (
+                          <p className="truncate text-sm font-semibold text-[color:var(--foreground)]">
+                            {memberName}
+                          </p>
+                        )}
+                        <p className="truncate text-xs text-[color:var(--muted)]">
+                          {user.email}
+                        </p>
+                      </div>
+                    </motion.div>
+
+                    {/* Members Area */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: (authItemBaseIndex + 2) * 0.06, duration: 0.3 }}
+                    >
+                      <a
+                        href="/members/hub"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-3 rounded-lg px-4 py-3 text-[15px] font-semibold text-[color:var(--muted)] transition-colors hover:bg-[color:var(--surface-strong)] hover:text-[color:var(--brand)]"
+                      >
+                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="3" width="7" height="7" rx="1" />
+                          <rect x="14" y="3" width="7" height="7" rx="1" />
+                          <rect x="3" y="14" width="7" height="7" rx="1" />
+                          <rect x="14" y="14" width="7" height="7" rx="1" />
+                        </svg>
+                        Members Area
+                      </a>
                     </motion.div>
 
                     {/* Members Directory */}
                     <motion.div
                       initial={{ opacity: 0, x: -16 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: (authItemBaseIndex + 2) * 0.06, duration: 0.3 }}
+                      transition={{ delay: (authItemBaseIndex + 3) * 0.06, duration: 0.3 }}
                     >
                       <a
                         href="/members"
@@ -221,7 +249,7 @@ export function MobileNav() {
                     <motion.div
                       initial={{ opacity: 0, x: -16 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: (authItemBaseIndex + 3) * 0.06, duration: 0.3 }}
+                      transition={{ delay: (authItemBaseIndex + 4) * 0.06, duration: 0.3 }}
                     >
                       <a
                         href="/members/prayer-requests"
@@ -239,7 +267,7 @@ export function MobileNav() {
                     <motion.div
                       initial={{ opacity: 0, x: -16 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: (authItemBaseIndex + 4) * 0.06, duration: 0.3 }}
+                      transition={{ delay: (authItemBaseIndex + 5) * 0.06, duration: 0.3 }}
                     >
                       <button
                         onClick={handleSignOut}
