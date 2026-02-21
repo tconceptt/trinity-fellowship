@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
+import { AuthProvider } from "@/app/lib/auth-context";
 import "./globals.css";
 
 const sourceSans = Source_Sans_3({
@@ -27,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${sourceSans.variable} ${cormorant.variable} antialiased`}>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

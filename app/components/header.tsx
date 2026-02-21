@@ -7,37 +7,23 @@ import {
   motion,
   AnimatePresence,
 } from "framer-motion";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { MobileNav } from "./mobile-nav";
-
-type NavItem = {
-  label: string;
-  href: string;
-  children?: { label: string; href: string }[];
-};
-
-const navLinks: NavItem[] = [
-  { label: "Home", href: "/" },
-  {
-    label: "About",
-    href: "/#about",
-    children: [
-      { label: "Our Story", href: "/#about" },
-      { label: "Our Pastors", href: "/pastors" },
-    ],
-  },
-  { label: "Schedule", href: "/#schedule" },
-  { label: "Children", href: "/#children" },
-  { label: "Beliefs", href: "/#beliefs" },
-  { label: "Visit", href: "/#visit" },
-  { label: "Members", href: "/members" },
-];
+import { SignInForm } from "./sign-in-form";
+import { navLinks } from "@/app/lib/nav-links";
+import { useAuth } from "@/app/lib/auth-context";
+import { getInitials, getAccent } from "@/app/lib/avatar-utils";
 
 export function Header() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [authDropdownOpen, setAuthDropdownOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const authDropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const { user, loading, signOut } = useAuth();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const isScrolled = latest > 48;
@@ -53,6 +39,29 @@ export function Header() {
     timeoutRef.current = setTimeout(() => setOpenDropdown(null), 150);
   }, []);
 
+  // Close auth dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (authDropdownRef.current && !authDropdownRef.current.contains(e.target as Node)) {
+        setAuthDropdownOpen(false);
+      }
+    }
+    if (authDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [authDropdownOpen]);
+
+  const handleSignOut = async () => {
+    setAuthDropdownOpen(false);
+    await signOut();
+    router.push("/");
+  };
+
+  const displayName = user?.user_metadata?.full_name || user?.email || "";
+  const initials = displayName ? getInitials(displayName) : "?";
+  const accent = displayName ? getAccent(displayName) : ["bg-[#1f3b53]/10", "text-[#1f3b53]"] as const;
+
   return (
     <header className="fixed left-0 right-0 top-0 z-50">
       <div
@@ -63,7 +72,7 @@ export function Header() {
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 md:grid md:grid-cols-[1fr_auto_1fr]">
-          {/* Logo sits outside the nav capsule */}
+          {/* Logo */}
           <a href="#" aria-label="Go to top" className="justify-self-start">
             <div className="flex items-center gap-3">
               <Image
@@ -149,8 +158,120 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Mobile Navigation */}
-          <div className="justify-self-end">
+          {/* Right side: Auth (desktop) + Mobile Nav */}
+          <div className="flex items-center gap-3 justify-self-end">
+            {/* Desktop auth section */}
+            <div className="relative hidden md:block" ref={authDropdownRef}>
+              {loading ? (
+                <div className="h-9 w-9" />
+              ) : user ? (
+                <>
+                  <button
+                    onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
+                    className={`flex h-9 w-9 items-center justify-center rounded-full font-serif text-xs font-bold transition-all duration-200 hover:ring-2 hover:ring-[color:var(--brand)]/20 ${accent[0]} ${accent[1]}`}
+                    aria-label="User menu"
+                  >
+                    {initials}
+                  </button>
+
+                  <AnimatePresence>
+                    {authDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                        className="absolute right-0 top-full z-50 mt-2"
+                      >
+                        <div className="w-64 overflow-hidden rounded-xl border border-[color:var(--line)] bg-[color:var(--surface)]/95 p-1.5 shadow-lg shadow-[rgba(31,59,83,0.12)] backdrop-blur-md">
+                          {/* User info */}
+                          <div className="px-3 py-2.5">
+                            <p className="truncate text-xs text-[color:var(--muted)]">
+                              {user.email}
+                            </p>
+                          </div>
+                          <div className="mx-1.5 border-t border-[color:var(--line)]" />
+
+                          {/* Links */}
+                          <a
+                            href="/members"
+                            onClick={() => setAuthDropdownOpen(false)}
+                            className="mt-1 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-semibold text-[color:var(--muted)] transition-all duration-200 hover:bg-[color:var(--brand)]/6 hover:text-[color:var(--brand)]"
+                          >
+                            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                              <circle cx="9" cy="7" r="4" />
+                              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                            Members Directory
+                          </a>
+                          <a
+                            href="/members/prayer-requests"
+                            onClick={() => setAuthDropdownOpen(false)}
+                            className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-semibold text-[color:var(--muted)] transition-all duration-200 hover:bg-[color:var(--brand)]/6 hover:text-[color:var(--brand)]"
+                          >
+                            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                            </svg>
+                            Prayer Requests
+                          </a>
+
+                          <div className="mx-1.5 mt-1 border-t border-[color:var(--line)]" />
+
+                          <button
+                            onClick={handleSignOut}
+                            className="mt-1 flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-semibold text-[color:var(--muted)] transition-all duration-200 hover:bg-red-500/6 hover:text-red-600"
+                          >
+                            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                              <polyline points="16 17 21 12 16 7" />
+                              <line x1="21" x2="9" y1="12" y2="12" />
+                            </svg>
+                            Sign Out
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
+                    className="rounded-full border border-[color:var(--brand)]/25 px-4 py-1.5 text-[13px] font-bold uppercase tracking-[0.1em] text-[color:var(--brand)] transition-all duration-300 hover:border-[color:var(--brand)]/50 hover:bg-[color:var(--brand)]/6"
+                  >
+                    Sign In
+                  </button>
+
+                  <AnimatePresence>
+                    {authDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                        className="absolute right-0 top-full z-50 mt-2"
+                      >
+                        <div className="w-72 overflow-hidden rounded-xl border border-[color:var(--line)] bg-[color:var(--surface)]/95 p-5 shadow-lg shadow-[rgba(31,59,83,0.12)] backdrop-blur-md">
+                          <p className="text-center text-sm font-semibold text-[color:var(--foreground)]">
+                            Member Sign In
+                          </p>
+                          <p className="mt-1 text-center text-xs text-[color:var(--muted)]">
+                            Enter your email to receive a login link.
+                          </p>
+                          <div className="mt-4">
+                            <SignInForm compact />
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              )}
+            </div>
+
+            {/* Mobile Navigation */}
             <MobileNav />
           </div>
         </div>
