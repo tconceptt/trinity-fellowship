@@ -11,6 +11,7 @@ export const navLinks: NavItem[] = [
     href: "/#about",
     children: [
       { label: "Our Story", href: "/#about" },
+      { label: "Our Pastors", href: "/pastors" },
     ],
   },
   { label: "Schedule", href: "/#schedule" },
