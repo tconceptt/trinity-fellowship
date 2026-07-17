@@ -1,23 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { navLinks } from "@/app/lib/nav-links";
+import { useRouter, usePathname } from "next/navigation";
+import { navLinks, type NavItem } from "@/app/lib/nav-links";
 import { useAuth } from "@/app/lib/auth-context";
 import { getInitials, getAccent } from "@/app/lib/avatar-utils";
+
+function isNavItemActive(item: NavItem, pathname: string) {
+  const paths = item.match ?? [item.href];
+  return paths.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const router = useRouter();
-  const { user, loading, signOut, memberName, memberFirstName } = useAuth();
+  const pathname = usePathname();
+  const { user, loading, signOut, memberName } = useAuth();
 
   const handleSignOut = async () => {
     setOpen(false);
     await signOut();
     router.push("/");
   };
+
+  // Lock body scroll while the panel is open.
+  useEffect(() => {
+    if (!open) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [open]);
 
   const displayName = memberName || user?.user_metadata?.full_name || user?.email || "";
   const initials = displayName ? getInitials(displayName) : "?";
@@ -32,6 +49,7 @@ export function MobileNav() {
         onClick={() => setOpen(!open)}
         className="relative z-50 flex h-10 w-10 items-center justify-center"
         aria-label={open ? "Close menu" : "Open menu"}
+        aria-expanded={open}
       >
         <div className="flex w-5 flex-col gap-[5px]">
           <motion.span
@@ -63,14 +81,16 @@ export function MobileNav() {
               onClick={() => setOpen(false)}
             />
             <motion.nav
-              className="fixed inset-x-4 top-20 z-40 rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-6 shadow-xl"
+              className="fixed inset-x-4 top-20 z-40 max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-xl"
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="flex flex-col gap-1">
-                {navLinks.map((link, i) => (
+                {navLinks.map((link, i) => {
+                  const active = isNavItemActive(link, pathname);
+                  return (
                   <motion.div
                     key={link.label}
                     initial={{ opacity: 0, x: -16 }}
@@ -85,7 +105,10 @@ export function MobileNav() {
                               expandedItem === link.label ? null : link.label
                             )
                           }
-                          className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-lg font-semibold text-[color:var(--brand)] transition-colors hover:bg-[color:var(--surface-strong)]"
+                          aria-expanded={expandedItem === link.label}
+                          className={`flex w-full items-center justify-between rounded-lg px-4 py-3 text-lg font-semibold transition-colors hover:bg-[color:var(--surface-strong)] ${
+                            active ? "text-[color:var(--accent)]" : "text-[color:var(--brand)]"
+                          }`}
                         >
                           {link.label}
                           <motion.svg
@@ -119,14 +142,14 @@ export function MobileNav() {
                             >
                               <div className="ml-4 border-l border-[color:var(--line)] py-1 pl-4">
                                 {link.children.map((child) => (
-                                  <a
+                                  <Link
                                     key={child.href}
                                     href={child.href}
                                     onClick={() => setOpen(false)}
                                     className="block rounded-lg px-3 py-2.5 text-[15px] font-medium text-[color:var(--muted)] transition-colors hover:bg-[color:var(--surface-strong)] hover:text-[color:var(--brand)]"
                                   >
                                     {child.label}
-                                  </a>
+                                  </Link>
                                 ))}
                               </div>
                             </motion.div>
@@ -134,16 +157,19 @@ export function MobileNav() {
                         </AnimatePresence>
                       </div>
                     ) : (
-                      <a
+                      <Link
                         href={link.href}
                         onClick={() => setOpen(false)}
-                        className="block rounded-lg px-4 py-3 text-lg font-semibold text-[color:var(--brand)] transition-colors hover:bg-[color:var(--surface-strong)]"
+                        className={`block rounded-lg px-4 py-3 text-lg font-semibold transition-colors hover:bg-[color:var(--surface-strong)] ${
+                          active ? "text-[color:var(--accent)]" : "text-[color:var(--brand)]"
+                        }`}
                       >
                         {link.label}
-                      </a>
+                      </Link>
                     )}
                   </motion.div>
-                ))}
+                  );
+                })}
 
                 {/* Auth section divider */}
                 {!loading && (
@@ -162,7 +188,7 @@ export function MobileNav() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: (authItemBaseIndex + 1) * 0.06, duration: 0.3 }}
                   >
-                    <a
+                    <Link
                       href="/members/login"
                       onClick={() => setOpen(false)}
                       className="flex items-center gap-3 rounded-lg px-4 py-3 text-lg font-semibold text-[color:var(--brand)] transition-colors hover:bg-[color:var(--surface-strong)]"
@@ -173,7 +199,7 @@ export function MobileNav() {
                         <line x1="15" x2="3" y1="12" y2="12" />
                       </svg>
                       Sign In
-                    </a>
+                    </Link>
                   </motion.div>
                 )}
 
@@ -209,7 +235,7 @@ export function MobileNav() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: (authItemBaseIndex + 2) * 0.06, duration: 0.3 }}
                     >
-                      <a
+                      <Link
                         href="/members/hub"
                         onClick={() => setOpen(false)}
                         className="flex items-center gap-3 rounded-lg px-4 py-3 text-[15px] font-semibold text-[color:var(--muted)] transition-colors hover:bg-[color:var(--surface-strong)] hover:text-[color:var(--brand)]"
@@ -221,7 +247,7 @@ export function MobileNav() {
                           <rect x="14" y="14" width="7" height="7" rx="1" />
                         </svg>
                         Members Area
-                      </a>
+                      </Link>
                     </motion.div>
 
                     {/* Members Directory */}
@@ -230,7 +256,7 @@ export function MobileNav() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: (authItemBaseIndex + 3) * 0.06, duration: 0.3 }}
                     >
-                      <a
+                      <Link
                         href="/members"
                         onClick={() => setOpen(false)}
                         className="flex items-center gap-3 rounded-lg px-4 py-3 text-[15px] font-semibold text-[color:var(--muted)] transition-colors hover:bg-[color:var(--surface-strong)] hover:text-[color:var(--brand)]"
@@ -242,7 +268,7 @@ export function MobileNav() {
                           <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                         </svg>
                         Members Directory
-                      </a>
+                      </Link>
                     </motion.div>
 
                     {/* Prayer Requests */}
@@ -251,7 +277,7 @@ export function MobileNav() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: (authItemBaseIndex + 4) * 0.06, duration: 0.3 }}
                     >
-                      <a
+                      <Link
                         href="/members/prayer-requests"
                         onClick={() => setOpen(false)}
                         className="flex items-center gap-3 rounded-lg px-4 py-3 text-[15px] font-semibold text-[color:var(--muted)] transition-colors hover:bg-[color:var(--surface-strong)] hover:text-[color:var(--brand)]"
@@ -260,7 +286,7 @@ export function MobileNav() {
                           <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
                         </svg>
                         Prayer Requests
-                      </a>
+                      </Link>
                     </motion.div>
 
                     {/* Sign Out */}

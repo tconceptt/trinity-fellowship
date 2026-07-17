@@ -6,7 +6,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { createClient } from "@/app/lib/supabase/browser";
 import { getInitials, getAccent } from "@/app/lib/avatar-utils";
-import { Header } from "@/app/components/header";
 
 type Member = {
   id: string;
@@ -101,8 +100,6 @@ export default function MembersPage() {
 
   return (
     <div className="min-h-screen bg-[color:var(--background)]">
-      <Header />
-
       <main className="mx-auto max-w-5xl px-5 pt-28 pb-16 sm:px-8">
         {/* Loading */}
         {status === "loading" && (

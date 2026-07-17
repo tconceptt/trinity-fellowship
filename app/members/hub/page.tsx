@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Header } from "@/app/components/header";
 import { useAuth } from "@/app/lib/auth-context";
 
 const verses = [
@@ -59,8 +58,6 @@ export default function MembersHubPage() {
 
   return (
     <div className="min-h-screen bg-[color:var(--background)]">
-      <Header />
-
       <main className="mx-auto max-w-3xl px-5 pt-28 pb-20 sm:px-8">
         {/* Hero */}
         <motion.div

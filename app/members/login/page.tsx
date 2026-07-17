@@ -4,7 +4,6 @@ import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { createClient } from "@/app/lib/supabase/browser";
-import { Header } from "@/app/components/header";
 import { SignInForm } from "@/app/components/sign-in-form";
 
 function LoginForm() {
@@ -66,7 +65,6 @@ function LoginForm() {
 export default function MembersLoginPage() {
   return (
     <div className="min-h-screen bg-[color:var(--background)]">
-      <Header />
       <main className="flex min-h-screen items-center justify-center px-5 pt-24 pb-12">
         <Suspense>
           <LoginForm />
