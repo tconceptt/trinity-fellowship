@@ -15,8 +15,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-source-sans);
-  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-display);
 }
 
 /* ── base ──────────────────────────────────── */
@@ -26,8 +26,10 @@ body {
   overflow-x: hidden;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-source-sans), "Source Sans 3", sans-serif;
+  font-family: var(--font-body), "Nunito Sans", sans-serif;
   line-height: 1.6;
+  font-optical-sizing: auto;
+  font-kerning: normal;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   background-image:
@@ -40,8 +42,29 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-cormorant), "Cormorant Garamond", serif;
-  letter-spacing: 0.01em;
+  font-family: var(--font-display), "Source Serif 4", serif;
+  letter-spacing: -0.01em;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+/*
+ * Per-page typography themes for the homepage redesign candidates
+ * (/home-v1..v5). Each page loads its own next/font pair and exposes it
+ * as --font-display-theme / --font-body-theme on a `.themed-type` wrapper,
+ * which re-fonts headings, body copy, and `font-serif` accents in scope.
+ */
+.themed-type {
+  font-family: var(--font-body-theme), sans-serif;
+}
+
+.themed-type :is(h1, h2, h3, h4),
+.themed-type .font-serif {
+  font-family: var(--font-display-theme), serif;
 }
 
 a {

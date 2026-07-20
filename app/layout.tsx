@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
+import { Source_Serif_4, Nunito_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { AuthProvider } from "@/app/lib/auth-context";
 import { Header } from "@/app/components/header";
@@ -8,15 +8,15 @@ import { ScrollProgress } from "@/app/components/animations";
 import { siteConfig } from "@/app/lib/site-config";
 import "./globals.css";
 
-const sourceSans = Source_Sans_3({
-  variable: "--font-source-sans",
+const nunitoSans = Nunito_Sans({
+  variable: "--font-body",
   subsets: ["latin"],
 });
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
+const sourceSerif = Source_Serif_4({
+  variable: "--font-display",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -57,7 +57,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${sourceSans.variable} ${cormorant.variable} antialiased`}>
+      <body className={`${nunitoSans.variable} ${sourceSerif.variable} antialiased`}>
         <AuthProvider>
           <ScrollProgress />
           <Header />
