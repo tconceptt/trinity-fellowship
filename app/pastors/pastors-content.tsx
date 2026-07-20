@@ -13,7 +13,6 @@ const pastors = [
       "Michael has served faithfully in pastoral ministry for over two decades, bringing a deep love for expository preaching and a heart for shepherding God's people.",
       "He and his family moved to Addis Ababa to plant and lead Trinity Fellowship, where he continues to labor in the ministry of the Word.",
     ],
-    quote: "Preach the word; be ready in season and out of season.",
   },
   {
     name: "Amanuel Yehualashet",
@@ -23,7 +22,6 @@ const pastors = [
       "Amanuel has worked with Ethiopian Airlines for nearly five years and graduated from Trinity Fellowship Pastors College in 2022. He now serves as the full-time Executive Pastor of Trinity Fellowship Addis Ababa Church.",
       "Alongside preaching and teaching, he oversees many of the church's daily ministries and operations, and serves as the Director of Student Care at Trinity Fellowship Pastors College. Amanuel married his wife, Hallelujah, in 2023.",
     ],
-    quote: "Building up the body of Christ in love and truth.",
   },
   {
     name: "Yeabtsega Haile",
@@ -33,7 +31,6 @@ const pastors = [
       "Yeabtsega is married to Kimia and has a son, Yohanan. He studied for his bachelor's degree in Mechanical Engineering, and earned his PGiD and MA from Trinity Fellowship Pastors College. He is now pursuing an MTh at Union School of Theology.",
       "He serves as an Assistant Dean at the Pastors College, overseeing daily operations and teaching, and also serves as a bi-vocational pastor at Trinity Fellowship Church.",
     ],
-    quote: "Serving the next generation with gladness and joy.",
   },
 ];
 
@@ -92,13 +89,6 @@ function PastorRow({ pastor, index }: { pastor: Pastor; index: number }) {
                 </p>
               ))}
             </div>
-
-            <blockquote className="relative">
-              <span className={`absolute -top-4 -left-5 sm:-left-6 text-5xl sm:text-6xl font-serif text-[color:var(--brand-soft)] opacity-20 ${isEven ? '' : 'lg:hidden'}`}>&ldquo;</span>
-              <p className={`font-serif text-lg sm:text-2xl text-[color:var(--brand)] italic leading-snug max-w-lg ${isEven ? '' : 'lg:text-right lg:ml-auto'}`}>
-                {pastor.quote}
-              </p>
-            </blockquote>
           </div>
         </ScrollReveal>
       </div>
