@@ -11,6 +11,7 @@ const routes = [
   "/college",
   "/visit",
   "/visit/what-to-expect",
+  "/give",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

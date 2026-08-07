@@ -9,6 +9,7 @@ const quickLinks = [
   { label: "Children", href: "/children" },
   { label: "College", href: "/college" },
   { label: "Visit", href: "/visit" },
+  { label: "Give", href: "/give" },
   { label: "Members", href: "/members" },
 ];
 

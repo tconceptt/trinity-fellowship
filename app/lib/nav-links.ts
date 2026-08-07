@@ -38,4 +38,9 @@ export const navLinks: NavItem[] = [
       { label: "What to Expect", href: "/visit/what-to-expect" },
     ],
   },
+  {
+    label: "Give",
+    href: "/give",
+    match: ["/give"],
+  },
 ];
