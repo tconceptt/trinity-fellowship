@@ -1,15 +1,56 @@
 @import "tailwindcss";
 
+/*
+ * Evening Glow palette. The site alternates two bands: warm cream daylight
+ * for reading, and deep ink navy lit by candlelight gold for heroes, closing
+ * calls to action, and the footer. Light-band tokens come first; the
+ * dark-band tokens below are used by any section that sits on --deep.
+ */
 :root {
+  /*
+   * Deliberate exception: impeccable's `cream-palette` detector flags a warm
+   * cream page background as a reflex AI surface. Here it is the approved
+   * Evening Glow light band, chosen against four other candidates and paired
+   * with the deep band below — kept knowingly, not by default.
+   */
+  /* warm light band */
   --background: #f5f0e8;
-  --foreground: #1e2a31;
+  --foreground: #1f3b53;
   --surface: #fbf8f3;
-  --surface-strong: #f0e9dd;
+  --surface-strong: #efe7d8;
   --muted: #586574;
-  --line: #d9cfbd;
+  --line: #ddd0b8;
   --brand: #1f3b53;
   --brand-soft: #506d83;
-  --accent: #7f5b34;
+  --accent: #8f6224;
+
+  /* deep evening band */
+  --deep: #0f1e2b;
+  --deep-soft: #152a3b;
+  --gold: #d9a441;
+  --gold-bright: #e8b957;
+  --cream: #f3ecdd;
+  --cream-faded: rgba(243, 236, 221, 0.68);
+  --cream-line: rgba(243, 236, 221, 0.16);
+  --cream-line-strong: rgba(243, 236, 221, 0.35);
+
+  /* Focus indicator, re-pointed per band so it always clears 3:1. */
+  --focus: var(--accent);
+}
+
+/*
+ * The deep band. Every dark section opts in through this one class rather
+ * than repeating background/colour pairs inline, so the band's foreground,
+ * rules, and focus colour move together.
+ */
+.band-deep {
+  background-color: var(--deep);
+  color: var(--cream);
+  --focus: var(--gold);
+  --line: var(--cream-line);
+  --muted: var(--cream-faded);
+  --foreground: var(--cream);
+  --accent: var(--gold);
 }
 
 @theme inline {
@@ -26,24 +67,23 @@ body {
   overflow-x: hidden;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-body), "Nunito Sans", sans-serif;
+  font-family: var(--font-body), "Figtree", sans-serif;
   line-height: 1.6;
   font-optical-sizing: auto;
   font-kerning: normal;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  background-image:
-    radial-gradient(1200px 600px at 10% -10%, rgba(31, 59, 83, 0.10), transparent 58%),
-    radial-gradient(900px 500px at 100% 20%, rgba(127, 91, 52, 0.10), transparent 55%),
-    linear-gradient(180deg, #f8f4ed 0%, #f5f0e8 100%);
 }
 
 h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-display), "Source Serif 4", serif;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display), "Marcellus", serif;
+  /* Marcellus ships a single 400 weight — never let the browser fake a bold. */
+  font-weight: 400;
+  font-synthesis-weight: none;
+  letter-spacing: 0.01em;
 }
 
 h1,
@@ -52,19 +92,19 @@ h3 {
   text-wrap: balance;
 }
 
-/*
- * Per-page typography themes for the homepage redesign candidates
- * (/home-v1..v5). Each page loads its own next/font pair and exposes it
- * as --font-display-theme / --font-body-theme on a `.themed-type` wrapper,
- * which re-fonts headings, body copy, and `font-serif` accents in scope.
- */
-.themed-type {
-  font-family: var(--font-body-theme), sans-serif;
+/* `font-serif` accents (eyebrows, numerals, captions) share the display face. */
+.font-serif {
+  font-weight: 400;
+  font-synthesis-weight: none;
 }
 
-.themed-type :is(h1, h2, h3, h4),
-.themed-type .font-serif {
-  font-family: var(--font-display-theme), serif;
+/*
+ * Quoted voices — Scripture, confessions, testimony — are set in EB Garamond
+ * italic, the one place the display face steps aside.
+ */
+.font-quote {
+  font-family: var(--font-quote), "EB Garamond", Georgia, serif;
+  font-style: italic;
 }
 
 a {
@@ -76,30 +116,143 @@ html {
   scroll-behavior: smooth;
 }
 
-/* ── selection colour ─────────────────────── */
+/* ── browser surfaces ─────────────────────────
+   The parts we did not draw still belong to the palette: selection, caret,
+   focus ring, scrollbar, and underline offset all ship themed. */
 
 ::selection {
-  background-color: rgba(31, 59, 83, 0.15);
+  background-color: rgba(217, 164, 65, 0.28);
   color: var(--foreground);
 }
 
-/* ── scrollbar (subtle) ───────────────────── */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* The ring is the focus signal; never let a UA default double-draw it. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+input,
+textarea {
+  caret-color: var(--accent);
+}
+
+/* Prose links carry an underline that clears the descenders. */
+.prose-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+}
+
+.prose-link:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Times, dates, and counts align in a column. */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--surface-strong);
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--line);
-  border-radius: 3px;
+  border: 3px solid var(--surface-strong);
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--brand-soft);
+  background: var(--accent);
+}
+
+/* ── buttons ──────────────────────────────────
+   Four roles, two per band. Feedback is a colour change; nothing grows,
+   lifts, or casts a shadow on hover. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+
+.btn-gold {
+  background-color: var(--gold);
+  color: var(--deep);
+}
+.btn-gold:hover {
+  background-color: var(--gold-bright);
+}
+
+.btn-brand {
+  background-color: var(--brand);
+  color: var(--cream);
+}
+.btn-brand:hover {
+  background-color: var(--brand-soft);
+}
+
+.btn-outline {
+  border: 1px solid var(--line);
+  color: var(--foreground);
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.band-deep .btn-outline {
+  border-color: var(--cream-line-strong);
+  color: var(--cream);
+}
+.band-deep .btn-outline:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ── the one authored moment ──────────────────
+   The hero settles on arrival. Nothing else on the site animates in on
+   scroll; a section that fades up on every page is noise, not motion. */
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-intro > * {
+  animation: hero-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-intro > *:nth-child(2) {
+  animation-delay: 90ms;
+}
+.hero-intro > *:nth-child(3) {
+  animation-delay: 180ms;
+}
+.hero-intro > *:nth-child(4) {
+  animation-delay: 270ms;
 }
 
 /* ── accessibility: reduced motion ────────── */

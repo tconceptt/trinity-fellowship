@@ -2,12 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { PageHero } from "@/app/components/page-hero";
 import { NextStepCTA } from "@/app/components/next-step-cta";
-import {
-  StaggerChildren,
-  StaggerItem,
-  StickyImageSection,
-  SectionDivider,
-} from "@/app/components/animations";
+import { StickyImageSection } from "@/app/components/animations";
 import { ministryFocus } from "@/app/lib/site-content";
 
 export const metadata: Metadata = {
@@ -21,41 +16,37 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen">
       <PageHero
-        eyebrow="Who We Are"
         title="A Church Formed by Grace"
         lede="We believe the church should feel both reverent and alive. As we worship, pray, preach, and serve, we seek a life that is spiritually deep, biblically grounded, and richly communal."
       />
 
       {/* ── word / worship / witness ──────── */}
-      <section className="mx-auto max-w-7xl px-5 pb-20 sm:px-8 sm:pb-28">
-        <StaggerChildren className="grid gap-8 sm:grid-cols-3" staggerDelay={0.15}>
+      <section className="mx-auto max-w-6xl px-5 pt-20 pb-20 sm:px-8 sm:pt-24 sm:pb-28">
+        <dl className="border-t border-[color:var(--line)]">
           {ministryFocus.map((item) => (
-            <StaggerItem key={item.title} direction="up">
-              <div className="group relative h-full border-l-2 border-[color:var(--line)] py-2 pl-6 transition-all duration-500 hover:border-[color:var(--accent)] hover:pl-8">
-                <span className="absolute -left-[1px] top-0 block h-0 w-[2px] bg-[color:var(--accent)] transition-all duration-500 group-hover:h-full" />
-                <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-xs text-[color:var(--brand-soft)] opacity-60">
-                    {item.number}
-                  </span>
-                  <h2 className="text-3xl text-[color:var(--brand)] sm:text-4xl">{item.title}</h2>
-                </div>
-                <p className="mt-2 text-[color:var(--muted)]">{item.detail}</p>
-              </div>
-            </StaggerItem>
+            <div
+              key={item.title}
+              className="grid gap-2 border-b border-[color:var(--line)] py-8 sm:grid-cols-[minmax(0,14rem)_1fr] sm:gap-12"
+            >
+              <dt className="text-[clamp(1.75rem,3vw,2.5rem)] leading-none text-[color:var(--brand)]">
+                {item.title}
+              </dt>
+              <dd className="max-w-[54ch] text-lg leading-relaxed text-[color:var(--muted)]">
+                {item.detail}
+              </dd>
+            </div>
           ))}
-        </StaggerChildren>
+        </dl>
       </section>
 
-      {/* ── cityscape parallax quote ───────── */}
+      {/* ── cityscape quote ────────────────── */}
       <StickyImageSection
+        className="band-deep"
         overlay={
-          <div className="mx-auto max-w-7xl px-6 sm:px-10">
-            <blockquote
-              className="max-w-3xl text-3xl leading-tight text-[#fbf4e8] sm:text-5xl lg:text-6xl"
-              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3)" }}
-            >
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <blockquote className="max-w-4xl text-[clamp(1.75rem,4vw,3.25rem)] leading-[1.3]">
               &ldquo;By his Word and Spirit, Christ is building his church
-              <span className="text-[#c9b89a]"> in every tribe, tongue, and nation.</span>
+              <span className="text-[color:var(--gold)]"> in every tribe, tongue, and nation.</span>
               &rdquo;
             </blockquote>
           </div>
@@ -68,20 +59,18 @@ export default function AboutPage() {
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(14,33,48,0.72)_14%,rgba(14,33,48,0.35)_50%,rgba(14,33,48,0.72)_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(255,255,255,0.2),transparent_40%)]" />
+        {/* The wash carries the contrast so the type never depends on the photo. */}
+        <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(15,30,43,0.84)_14%,rgba(15,30,43,0.58)_50%,rgba(15,30,43,0.86)_100%)]" />
       </StickyImageSection>
 
       {/* ── our aim ─────────────────────────── */}
       <StickyImageSection
+        className="band-deep"
         overlay={
-          <div className="mx-auto max-w-7xl px-6 sm:px-12">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9b89a]">
-              Our Aim
-            </p>
-            <p className="mt-4 max-w-3xl text-3xl leading-tight text-[#f5ecde] sm:text-5xl lg:text-6xl">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <p className="max-w-4xl text-[clamp(1.75rem,4vw,3.25rem)] leading-[1.3]">
               To worship God, mature believers, and bear witness to Christ and his kingdom
-              <span className="text-[#c9b89a]"> in all the world.</span>
+              <span className="text-[color:var(--gold)]"> in all the world.</span>
             </p>
           </div>
         }
@@ -93,13 +82,10 @@ export default function AboutPage() {
           sizes="100vw"
           className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(12,28,41,0.78)_12%,rgba(12,28,41,0.30)_56%,rgba(12,28,41,0.78)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(15,30,43,0.86)_12%,rgba(15,30,43,0.58)_56%,rgba(15,30,43,0.86)_100%)]" />
       </StickyImageSection>
 
-      <SectionDivider className="mx-auto max-w-7xl px-5 sm:px-8" />
-
       <NextStepCTA
-        eyebrow="Next Steps"
         title="Get to Know Trinity Fellowship"
         description="Meet our pastors and read the doctrinal convictions that shape our life together."
         links={[

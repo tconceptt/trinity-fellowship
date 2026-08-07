@@ -66,10 +66,7 @@ export default function MembersHubPage() {
           transition={{ duration: 0.6, ease }}
           className="text-center"
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
-            Members Area
-          </p>
-          <h1 className="mt-3 font-serif text-4xl text-[color:var(--foreground)] sm:text-5xl">
+          <h1 className="font-serif text-4xl text-[color:var(--foreground)] sm:text-5xl">
             {memberFirstName
               ? `Welcome back, ${memberFirstName}.`
               : "Welcome back."}
@@ -91,14 +88,14 @@ export default function MembersHubPage() {
             <Link
               key={link.href}
               href={link.href}
-              className="group relative flex flex-col items-center rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-8 text-center transition-all duration-500 hover:border-[color:var(--brand-soft)] hover:shadow-xl hover:shadow-[rgba(31,59,83,0.08)]"
+              className="group relative flex flex-col items-center rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-8 text-center transition-all duration-500 hover:border-[color:var(--brand-soft)]"
             >
               <div
                 className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-transform duration-500 group-hover:scale-110 ${link.accentClass}`}
               >
                 {link.icon}
               </div>
-              <h2 className="mt-5 text-xl font-semibold text-[color:var(--foreground)]">
+              <h2 className="mt-5 text-xl text-[color:var(--foreground)]">
                 {link.title}
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
@@ -128,10 +125,7 @@ export default function MembersHubPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35, ease }}
         >
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
-            The Fellowship of the Saints
-          </p>
-          <h2 className="mt-3 text-center font-serif text-3xl text-[color:var(--foreground)] sm:text-4xl">
+          <h2 className="text-center font-serif text-3xl text-[color:var(--foreground)] sm:text-4xl">
             One Body, Many Members
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-center text-sm leading-relaxed text-[color:var(--muted)]">
@@ -159,7 +153,7 @@ export default function MembersHubPage() {
                   </div>
                 </div>
                 <div>
-                  <p className="text-[15px] italic leading-relaxed text-[color:var(--foreground)]/80">
+                  <p className="font-quote text-[15px] leading-relaxed text-[color:var(--foreground)]/80">
                     &ldquo;{verse.text}&rdquo;
                   </p>
                   <cite className="mt-3 block text-xs font-bold not-italic tracking-wide text-[color:var(--brand)]">

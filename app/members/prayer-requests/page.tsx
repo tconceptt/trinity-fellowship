@@ -195,7 +195,7 @@ export default function PrayerRequestsPage() {
               </p>
               <button
                 onClick={handleSignOut}
-                className="mt-8 rounded-full border border-[color:var(--line)] px-6 py-3 text-sm font-semibold text-[color:var(--brand)] transition-all duration-300 hover:border-[color:var(--brand)] hover:shadow-md"
+                className="mt-8 rounded-full border border-[color:var(--line)] px-6 py-3 text-sm font-semibold text-[color:var(--brand)] transition-all duration-300 hover:border-[color:var(--brand)]"
               >
                 Sign Out
               </button>
@@ -220,7 +220,7 @@ export default function PrayerRequestsPage() {
               </p>
               <button
                 onClick={() => window.location.reload()}
-                className="mt-6 rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-[color:var(--brand-soft)] hover:shadow-md"
+                className="mt-6 rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-semibold text-[color:var(--cream)] transition-all duration-300 hover:bg-[color:var(--brand-soft)]"
               >
                 Retry
               </button>
@@ -272,7 +272,7 @@ export default function PrayerRequestsPage() {
 
               {/* Bible verse */}
               <blockquote className="mx-auto mt-6 max-w-lg border-l-2 border-[color:var(--brand)]/30 pl-4 text-left">
-                <p className="text-sm italic leading-relaxed text-[color:var(--foreground)]/70">
+                <p className="font-quote text-sm leading-relaxed text-[color:var(--foreground)]/70">
                   &ldquo;Therefore confess your sins to each other and pray for
                   each other so that you may be healed. The prayer of a
                   righteous person is powerful and effective.&rdquo;
@@ -284,7 +284,7 @@ export default function PrayerRequestsPage() {
 
               <button
                 onClick={() => setShowForm(!showForm)}
-                className="mt-8 inline-flex items-center gap-2 rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-[color:var(--brand-soft)] hover:shadow-md"
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-semibold text-[color:var(--cream)] transition-all duration-300 hover:bg-[color:var(--brand-soft)]"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -346,7 +346,7 @@ export default function PrayerRequestsPage() {
                             onClick={() => setVisibility("all_members")}
                             className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200 ${
                               visibility === "all_members"
-                                ? "bg-[color:var(--brand)] text-white"
+                                ? "bg-[color:var(--brand)] text-[color:var(--cream)]"
                                 : "text-[color:var(--muted)] hover:text-[color:var(--foreground)]"
                             }`}
                           >
@@ -357,7 +357,7 @@ export default function PrayerRequestsPage() {
                             onClick={() => setVisibility("pastors_only")}
                             className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200 ${
                               visibility === "pastors_only"
-                                ? "bg-[color:var(--brand)] text-white"
+                                ? "bg-[color:var(--brand)] text-[color:var(--cream)]"
                                 : "text-[color:var(--muted)] hover:text-[color:var(--foreground)]"
                             }`}
                           >
@@ -374,7 +374,7 @@ export default function PrayerRequestsPage() {
                       <button
                         type="submit"
                         disabled={submitting || !body.trim()}
-                        className="shrink-0 rounded-full bg-[color:var(--brand)] px-6 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-[color:var(--brand-soft)] hover:shadow-md disabled:opacity-50 disabled:hover:bg-[color:var(--brand)] disabled:hover:shadow-none"
+                        className="shrink-0 rounded-full bg-[color:var(--brand)] px-6 py-2.5 text-sm font-semibold text-[color:var(--cream)] transition-all duration-300 hover:bg-[color:var(--brand-soft)] disabled:opacity-50 disabled:hover:bg-[color:var(--brand)] disabled:hover:shadow-none"
                       >
                         {submitting ? "Submitting..." : "Submit Request"}
                       </button>
@@ -387,8 +387,8 @@ export default function PrayerRequestsPage() {
             {/* Feed */}
             <div className="mt-8 space-y-4">
               {requests.length > 0 && (
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">
-                  From Our Church Family
+                <p className="font-serif text-sm text-[color:var(--muted)]">
+                  From our church family
                 </p>
               )}
             </div>

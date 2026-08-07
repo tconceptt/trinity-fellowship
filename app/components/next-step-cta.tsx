@@ -8,33 +8,29 @@ type CTALink = {
 };
 
 /**
- * A short closing call-to-action used at the bottom of each short-form page,
- * pointing the visitor to the next logical page.
+ * The closing call-to-action at the bottom of each short-form page, pointing
+ * the visitor to the next logical page. Sits on the deep band so every page
+ * closes the way the homepage does and hands off cleanly to the footer.
  */
 export function NextStepCTA({
-  eyebrow,
   title,
   description,
   links,
 }: {
-  eyebrow: string;
   title: string;
   description?: string;
   links: CTALink[];
 }) {
   return (
-    <section className="border-t border-[color:var(--line)] bg-[color:var(--surface)]">
+    <section className="band-deep border-t border-[color:var(--cream-line)]">
       <div className="mx-auto max-w-4xl px-5 py-20 text-center sm:px-8 sm:py-24">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
-          {eyebrow}
-        </p>
-        <h2 className="mt-3 text-3xl text-[color:var(--foreground)] sm:text-4xl">{title}</h2>
+        <h2 className="text-[clamp(1.9rem,3.4vw,2.75rem)] leading-[1.15]">{title}</h2>
         {description && (
-          <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-[color:var(--muted)]">
+          <p className="mx-auto mt-5 max-w-[54ch] text-lg leading-relaxed text-[color:var(--cream-faded)]">
             {description}
           </p>
         )}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           {links.map((link) =>
             link.variant === "outline" ? (
               <Link
@@ -42,7 +38,7 @@ export function NextStepCTA({
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
-                className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] bg-[color:var(--surface)] px-8 py-4 text-sm font-semibold text-[color:var(--brand)] transition-all duration-300 hover:border-[color:var(--brand)] hover:shadow-md"
+                className="inline-flex items-center justify-center rounded-lg border border-[color:var(--cream-line-strong)] px-7 py-3.5 text-sm font-semibold text-[color:var(--cream)] transition-colors duration-200 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
               >
                 {link.label}
               </Link>
@@ -52,7 +48,7 @@ export function NextStepCTA({
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
-                className="inline-flex items-center justify-center rounded-full bg-[color:var(--brand)] px-8 py-4 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-[color:var(--brand-soft)] hover:shadow-lg"
+                className="inline-flex items-center justify-center rounded-lg bg-[color:var(--gold)] px-7 py-3.5 text-sm font-semibold text-[color:var(--deep)] transition-colors duration-200 hover:bg-[color:var(--gold-bright)]"
               >
                 {link.label}
               </Link>

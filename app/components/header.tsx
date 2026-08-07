@@ -97,8 +97,8 @@ export function Header() {
       <div
         className={`relative border-b transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           scrolled
-            ? "border-[color:var(--line)] bg-[color:var(--surface)]/90 shadow-[0_10px_35px_-25px_rgba(18,32,45,0.7)] backdrop-blur-xl"
-            : "border-transparent bg-transparent"
+            ? "border-[color:var(--line)] bg-[color:var(--surface)]/95 backdrop-blur-xl"
+            : "border-[color:var(--line)] bg-[color:var(--background)]"
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-2.5 sm:px-8 md:grid md:grid-cols-[1fr_auto_1fr]">
@@ -117,7 +117,7 @@ export function Header() {
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-[color:var(--brand)] sm:text-sm">
                   Trinity Fellowship
                 </p>
-                <p className="hidden text-[10px] text-[color:var(--muted)] lg:block">
+                <p className="hidden text-[11px] leading-tight text-[color:var(--muted)] lg:block">
                   Addis Ababa, Ethiopia
                 </p>
               </div>
@@ -127,11 +127,8 @@ export function Header() {
           {/* Centered desktop navigation capsule */}
           <nav
             ref={navRef}
-            className={`hidden items-center gap-0.5 rounded-full border px-1.5 py-1 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:flex ${
-              scrolled
-                ? "border-transparent bg-transparent shadow-none"
-                : "border-white/65 bg-[#edf4ee]/95 shadow-[0_12px_26px_-18px_rgba(23,33,43,0.55)] backdrop-blur-sm"
-            }`}
+            /* The bar itself is the surface — the nav needs no second container. */
+            className="hidden items-center gap-0.5 px-1.5 py-1 md:flex"
           >
             {navLinks.map((item) => {
               const active = isNavItemActive(item, pathname);
@@ -317,7 +314,7 @@ export function Header() {
                     onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
                     aria-haspopup="menu"
                     aria-expanded={authDropdownOpen}
-                    className="rounded-full bg-[color:var(--brand)] px-5 py-2 text-[13px] font-bold uppercase tracking-[0.1em] text-white shadow-sm transition-all duration-300 hover:bg-[color:var(--brand-soft)] hover:shadow-md"
+                    className="rounded-full bg-[color:var(--brand)] px-5 py-2 text-[13px] font-bold uppercase tracking-[0.1em] text-[color:var(--cream)] transition-all duration-300 hover:bg-[color:var(--brand-soft)]"
                   >
                     Sign In
                   </button>

@@ -164,7 +164,7 @@ export function SignInForm({ compact = false, onSuccess }: SignInFormProps) {
           <button
             type="submit"
             disabled={loading || otpCode.length < 8}
-            className={`mt-4 w-full rounded-full bg-[color:var(--brand)] font-semibold text-white transition-all duration-300 hover:bg-[color:var(--brand-soft)] hover:shadow-md disabled:opacity-60 ${
+            className={`mt-4 w-full rounded-lg bg-[color:var(--brand)] font-semibold text-[color:var(--cream)] transition-all duration-300 hover:bg-[color:var(--brand-soft)] disabled:opacity-60 ${
               compact ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm"
             }`}
           >
@@ -245,8 +245,8 @@ export function SignInForm({ compact = false, onSuccess }: SignInFormProps) {
       <div>
         <label
           htmlFor={compact ? "email-compact" : "email"}
-          className={`block font-semibold uppercase tracking-[0.12em] text-[color:var(--brand-soft)] ${
-            compact ? "text-[10px]" : "text-xs"
+          className={`block font-semibold text-[color:var(--muted)] ${
+            compact ? "text-xs" : "text-sm"
           }`}
         >
           Email Address
@@ -266,7 +266,7 @@ export function SignInForm({ compact = false, onSuccess }: SignInFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className={`w-full rounded-full bg-[color:var(--brand)] font-semibold text-white transition-all duration-300 hover:bg-[color:var(--brand-soft)] hover:shadow-md disabled:opacity-60 ${
+        className={`w-full rounded-lg bg-[color:var(--brand)] font-semibold text-[color:var(--cream)] transition-all duration-300 hover:bg-[color:var(--brand-soft)] disabled:opacity-60 ${
           compact ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm"
         }`}
       >

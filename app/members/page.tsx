@@ -146,7 +146,7 @@ export default function MembersPage() {
               </p>
               <button
                 onClick={handleSignOut}
-                className="mt-8 rounded-full border border-[color:var(--line)] px-6 py-3 text-sm font-semibold text-[color:var(--brand)] transition-all duration-300 hover:border-[color:var(--brand)] hover:shadow-md"
+                className="mt-8 rounded-full border border-[color:var(--line)] px-6 py-3 text-sm font-semibold text-[color:var(--brand)] transition-all duration-300 hover:border-[color:var(--brand)]"
               >
                 Sign Out
               </button>
@@ -171,7 +171,7 @@ export default function MembersPage() {
               </p>
               <button
                 onClick={() => window.location.reload()}
-                className="mt-6 rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-[color:var(--brand-soft)] hover:shadow-md"
+                className="mt-6 rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-semibold text-[color:var(--cream)] transition-all duration-300 hover:bg-[color:var(--brand-soft)]"
               >
                 Retry
               </button>
@@ -200,10 +200,7 @@ export default function MembersPage() {
             {/* Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
-                  Members Only
-                </p>
-                <h1 className="mt-1 font-serif text-4xl text-[color:var(--foreground)] sm:text-5xl">
+                <h1 className="font-serif text-4xl text-[color:var(--foreground)] sm:text-5xl">
                   Church Directory
                 </h1>
                 <p className="mt-2 text-sm text-[color:var(--muted)]">
@@ -275,7 +272,7 @@ export default function MembersPage() {
                   <section key={letter} id={`letter-${letter}`} className="scroll-mt-28">
                     {/* Letter anchor */}
                     <div className="sticky top-24 z-10 -mx-2 mb-1 flex items-center gap-3 bg-[color:var(--background)]/95 px-2 py-2 backdrop-blur-sm">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[color:var(--brand)] font-serif text-base font-bold text-white">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[color:var(--brand)] font-serif text-base font-bold text-[color:var(--cream)]">
                         {letter}
                       </span>
                       <div className="h-px flex-1 bg-[color:var(--line)]" />

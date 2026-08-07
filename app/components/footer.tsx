@@ -16,8 +16,8 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-[color:var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.2),rgba(255,255,255,0))]">
-      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-14">
+    <footer className="band-deep border-t border-[color:var(--cream-line)]">
+      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-16">
         <div className="grid gap-10 md:grid-cols-[1.3fr_1fr] md:gap-12">
           <div>
             <div className="flex items-center gap-3">
@@ -28,30 +28,30 @@ export function Footer() {
                 height={40}
               />
               <div>
-                <p className="text-lg font-semibold text-[color:var(--brand)]">
+                <p className="font-serif text-lg text-[color:var(--cream)]">
                   Trinity Fellowship Addis Ababa
                 </p>
-                <p className="text-xs uppercase tracking-[0.12em] text-[color:var(--brand-soft)]">
+                <p className="text-sm text-[color:var(--cream-faded)]">
                   Part of Sovereign Grace Churches
                 </p>
               </div>
             </div>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-[color:var(--muted)]">
+            <p className="mt-5 max-w-md text-sm leading-relaxed text-[color:var(--cream-faded)]">
               Worship with us in Sarbet on Sundays, or visit our church office during the week at
               Karama Building.
             </p>
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--brand-soft)]">
+            <p className="font-serif text-sm text-[color:var(--gold)]">
               Quick Links
             </p>
-            <nav className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-sm font-semibold text-[color:var(--muted)]">
+            <nav className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-sm font-semibold text-[color:var(--cream-faded)]">
               {quickLinks.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="transition-colors hover:text-[color:var(--brand)]"
+                  className="transition-colors hover:text-[color:var(--gold)]"
                 >
                   {link.label}
                 </Link>
@@ -60,8 +60,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-[color:var(--line)] pt-5">
-          <p className="text-xs text-[color:var(--muted)]">
+        <div className="mt-10 border-t border-[color:var(--cream-line)] pt-5">
+          <p className="text-xs text-[color:var(--cream-faded)]">
             © {currentYear} Trinity Fellowship Addis Ababa. All rights reserved.
           </p>
         </div>

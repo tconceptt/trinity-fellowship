@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function PastorsPage() {
   return (
-    <div className="min-h-screen bg-[color:var(--background)] selection:bg-[color:var(--brand-soft)] selection:text-white">
+    <div className="min-h-screen">
       <PastorsContent />
     </div>
   );

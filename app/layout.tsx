@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Source_Serif_4, Nunito_Sans } from "next/font/google";
+import { Marcellus, Figtree, EB_Garamond } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { AuthProvider } from "@/app/lib/auth-context";
 import { Header } from "@/app/components/header";
@@ -8,15 +8,27 @@ import { ScrollProgress } from "@/app/components/animations";
 import { siteConfig } from "@/app/lib/site-config";
 import "./globals.css";
 
-const nunitoSans = Nunito_Sans({
+/*
+ * Evening Glow type: Marcellus (inscriptional Roman, single weight — carved
+ * stone in candlelight) for display, Figtree for body, and EB Garamond italic
+ * reserved for quoted voices — Scripture, confessions, testimony.
+ */
+const figtree = Figtree({
   variable: "--font-body",
   subsets: ["latin"],
 });
 
-const sourceSerif = Source_Serif_4({
+const marcellus = Marcellus({
   variable: "--font-display",
   subsets: ["latin"],
-  style: ["normal", "italic"],
+  weight: "400",
+});
+
+const ebGaramond = EB_Garamond({
+  variable: "--font-quote",
+  subsets: ["latin"],
+  weight: "500",
+  style: "italic",
 });
 
 export const metadata: Metadata = {
@@ -57,7 +69,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${nunitoSans.variable} ${sourceSerif.variable} antialiased`}>
+      <body
+        className={`${figtree.variable} ${marcellus.variable} ${ebGaramond.variable} antialiased`}
+      >
         <AuthProvider>
           <ScrollProgress />
           <Header />

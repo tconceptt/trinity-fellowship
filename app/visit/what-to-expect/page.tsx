@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/app/components/page-hero";
 import { NextStepCTA } from "@/app/components/next-step-cta";
-import { ScrollReveal, StaggerChildren, StaggerItem } from "@/app/components/animations";
 
 export const metadata: Metadata = {
   title: "What to Expect",
@@ -17,9 +16,9 @@ const visitAnswers = [
     icon: (
       <svg
         viewBox="0 0 24 24"
-        className="h-6 w-6"
+        className="h-5 w-5"
         fill="none"
-        stroke="var(--brand)"
+        stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -37,9 +36,9 @@ const visitAnswers = [
     icon: (
       <svg
         viewBox="0 0 24 24"
-        className="h-6 w-6"
+        className="h-5 w-5"
         fill="none"
-        stroke="var(--brand)"
+        stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -55,9 +54,9 @@ const visitAnswers = [
     icon: (
       <svg
         viewBox="0 0 24 24"
-        className="h-6 w-6"
+        className="h-5 w-5"
         fill="none"
-        stroke="var(--brand)"
+        stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -76,9 +75,9 @@ const visitAnswers = [
     icon: (
       <svg
         viewBox="0 0 24 24"
-        className="h-6 w-6"
+        className="h-5 w-5"
         fill="none"
-        stroke="var(--brand)"
+        stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -121,69 +120,59 @@ export default function WhatToExpectPage() {
   return (
     <div className="min-h-screen">
       <PageHero
-        eyebrow="Your First Visit"
         title="What to Expect"
         lede="Wondering what a Sunday at Trinity Fellowship is like? Here are the answers to the questions first-time visitors ask most."
       />
 
       {/* ── common questions ────────────────── */}
-      <section className="mx-auto max-w-7xl px-5 pb-16 sm:px-8 sm:pb-20">
-        <StaggerChildren className="grid gap-5 sm:grid-cols-2" staggerDelay={0.1}>
+      <section className="mx-auto max-w-5xl px-5 pt-20 pb-16 sm:px-8 sm:pt-24 sm:pb-20">
+        <dl className="border-t border-[color:var(--line)]">
           {visitAnswers.map((item) => (
-            <StaggerItem key={item.title} direction="up">
-              <div className="h-full rounded-2xl border border-[color:var(--line)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:border-[color:var(--brand-soft)] hover:shadow-lg hover:shadow-[rgba(31,59,83,0.06)]">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--brand)]/10">
-                  {item.icon}
-                </div>
-                <h2 className="mt-4 text-xl font-semibold text-[color:var(--foreground)]">
-                  {item.title}
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
-                  {item.body}
-                </p>
-              </div>
-            </StaggerItem>
+            <div
+              key={item.title}
+              className="grid gap-3 border-b border-[color:var(--line)] py-8 sm:grid-cols-[minmax(0,14rem)_1fr] sm:gap-10"
+            >
+              <dt className="flex items-center gap-3 font-serif text-xl text-[color:var(--brand)]">
+                <span className="shrink-0 text-[color:var(--accent)]">{item.icon}</span>
+                {item.title}
+              </dt>
+              <dd className="max-w-[54ch] leading-relaxed text-[color:var(--muted)]">
+                {item.body}
+              </dd>
+            </div>
           ))}
-        </StaggerChildren>
+        </dl>
       </section>
 
       {/* ── how sunday morning flows ─────────── */}
       <section className="border-t border-[color:var(--line)] bg-[color:var(--surface)]">
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20">
-          <ScrollReveal>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
-              Sunday Morning
-            </p>
-            <h2 className="mt-3 text-3xl text-[color:var(--foreground)] sm:text-4xl">
-              How the Morning Flows
-            </h2>
-          </ScrollReveal>
+        <div className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-20">
+          <h2 className="text-[clamp(1.9rem,3.4vw,2.75rem)] leading-[1.15] text-[color:var(--brand)]">
+            How the Morning Flows
+          </h2>
 
-          <StaggerChildren className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" staggerDelay={0.1}>
-            {sundayFlow.map((step, i) => (
-              <StaggerItem key={step.title} direction="up">
-                <div className="h-full rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] p-6">
-                  <p className="font-mono text-xs text-[color:var(--brand-soft)] opacity-70">
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
-                  <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--accent)]">
-                    {step.time}
-                  </p>
-                  <h3 className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
+          <dl className="mt-10 border-t border-[color:var(--line)]">
+            {sundayFlow.map((step) => (
+              <div
+                key={step.title}
+                className="flex flex-col gap-1 border-b border-[color:var(--line)] py-6 sm:flex-row sm:items-baseline sm:gap-8"
+              >
+                <dt className="shrink-0 font-serif text-lg tabular-nums text-[color:var(--accent)] sm:w-44">
+                  {step.time}
+                </dt>
+                <dd>
+                  <p className="font-serif text-lg text-[color:var(--brand)]">{step.title}</p>
+                  <p className="mt-1 max-w-[54ch] text-sm leading-relaxed text-[color:var(--muted)]">
                     {step.detail}
                   </p>
-                </div>
-              </StaggerItem>
+                </dd>
+              </div>
             ))}
-          </StaggerChildren>
+          </dl>
         </div>
       </section>
 
       <NextStepCTA
-        eyebrow="Next Steps"
         title="We'd Love to See You Sunday"
         description="Find directions to the EGST compound in Sarbet, or learn more about what your kids will experience."
         links={[
