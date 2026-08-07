@@ -34,6 +34,13 @@
   --cream-line: rgba(243, 236, 221, 0.16);
   --cream-line-strong: rgba(243, 236, 221, 0.35);
 
+  /*
+   * Destructive actions — the one hue outside Evening Glow. Deleting a prayer
+   * request and a failed sign-in are the only places it appears, and a warm
+   * oxblood sits closer to the palette than a stock red would.
+   */
+  --danger: #a4302a;
+
   /* Focus indicator, re-pointed per band so it always clears 3:1. */
   --focus: var(--accent);
 }
