@@ -6,7 +6,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PageHero } from "@/app/components/page-hero";
 import { createClient } from "@/app/lib/supabase/browser";
 import { getInitials, getAccent } from "@/app/lib/avatar-utils";
-import { BackToHub, LoadFailed, MembersLoading, NotAMember } from "../members-states";
+import {
+  BackToHub,
+  LoadFailed,
+  MembersLoading,
+  NotAMember,
+} from "../members-states";
 
 type CurrentMember = {
   id: string;
@@ -44,15 +49,27 @@ export default function PrayerRequestsPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  const [status, setStatus] = useState<"loading" | "not-member" | "error" | "success">("loading");
-  const [currentMember, setCurrentMember] = useState<CurrentMember | null>(null);
+  const [status, setStatus] = useState<
+    "loading" | "not-member" | "error" | "success"
+  >("loading");
+  const [currentMember, setCurrentMember] = useState<CurrentMember | null>(
+    null,
+  );
   const [userEmail, setUserEmail] = useState("");
   const [requests, setRequests] = useState<PrayerRequest[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [body, setBody] = useState("");
-  const [visibility, setVisibility] = useState<"all_members" | "pastors_only">("all_members");
+  const [visibility, setVisibility] = useState<"all_members" | "pastors_only">(
+    "all_members",
+  );
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  /** Request whose inline "Remove?" confirmation is open. */
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<{
+    id: string;
+    message: string;
+  } | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -126,13 +143,29 @@ export default function PrayerRequestsPage() {
 
   async function handleDelete(id: string) {
     setDeletingId(id);
-    const { error } = await supabase
-      .from("prayer_requests")
-      .update({ is_active: false })
-      .eq("id", id);
+    setDeleteError(null);
 
-    if (!error) {
+    let message: string | null = null;
+    try {
+      const res = await fetch(`/api/prayer-requests/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+        message = data?.error ?? "Could not remove the request just now.";
+      }
+    } catch {
+      message =
+        "Could not reach the server. Check your connection and try again.";
+    }
+
+    if (message) {
+      setDeleteError({ id, message });
+    } else {
       setRequests((prev) => prev.filter((r) => r.id !== id));
+      setConfirmId(null);
     }
     setDeletingId(null);
   }
@@ -179,8 +212,9 @@ export default function PrayerRequestsPage() {
         <figure className="my-8 border-y border-[color:var(--line)] py-6">
           <blockquote>
             <p className="font-quote text-lg leading-relaxed text-[color:var(--brand)]">
-              &ldquo;Therefore, confess your sins to one another and pray for one another, that you
-              may be healed. The prayer of a righteous person has great power as it is working.&rdquo;
+              &ldquo;Therefore, confess your sins to one another and pray for
+              one another, that you may be healed. The prayer of a righteous
+              person has great power as it is working.&rdquo;
             </p>
           </blockquote>
           <figcaption className="mt-3 text-sm font-semibold text-[color:var(--accent)]">
@@ -188,7 +222,10 @@ export default function PrayerRequestsPage() {
           </figcaption>
         </figure>
 
-        <button onClick={() => setShowForm(!showForm)} className="btn btn-brand">
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="btn btn-brand"
+        >
           {showForm ? "Cancel" : "Share a Prayer Request"}
         </button>
 
@@ -305,11 +342,12 @@ export default function PrayerRequestsPage() {
                       <span className="text-xs text-[color:var(--muted)]">
                         {timeAgo(req.created_at)}
                       </span>
-                      {req.visibility === "pastors_only" && (isOwn || isPastor) && (
-                        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[color:var(--accent)]">
-                          Pastors Only
-                        </span>
-                      )}
+                      {req.visibility === "pastors_only" &&
+                        (isOwn || isPastor) && (
+                          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[color:var(--accent)]">
+                            Pastors Only
+                          </span>
+                        )}
                     </div>
                     <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-[color:var(--muted)]">
                       {req.body}
@@ -317,27 +355,22 @@ export default function PrayerRequestsPage() {
                   </div>
 
                   {isOwn && (
-                    <button
-                      onClick={() => handleDelete(req.id)}
-                      disabled={deletingId === req.id}
-                      aria-label="Remove this request"
-                      className="shrink-0 rounded-md p-2 text-[color:var(--muted)] transition-colors duration-200 hover:text-[color:var(--danger)] disabled:opacity-50"
-                    >
-                      <svg
-                        aria-hidden
-                        viewBox="0 0 24 24"
-                        className="h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M3 6h18" />
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                      </svg>
-                    </button>
+                    <OwnRequestControls
+                      confirming={confirmId === req.id}
+                      deleting={deletingId === req.id}
+                      error={
+                        deleteError?.id === req.id ? deleteError.message : null
+                      }
+                      onAsk={() => {
+                        setDeleteError(null);
+                        setConfirmId(req.id);
+                      }}
+                      onKeep={() => {
+                        setConfirmId(null);
+                        setDeleteError(null);
+                      }}
+                      onRemove={() => handleDelete(req.id)}
+                    />
                   )}
                 </li>
               );
@@ -346,5 +379,95 @@ export default function PrayerRequestsPage() {
         )}
       </section>
     </div>
+  );
+}
+
+/**
+ * A stray tap on a trash icon should not erase something a member wrote
+ * from the heart, so removal asks once, inline, and reports failure in place
+ * rather than pretending it worked.
+ */
+function OwnRequestControls({
+  confirming,
+  deleting,
+  error,
+  onAsk,
+  onKeep,
+  onRemove,
+}: {
+  confirming: boolean;
+  deleting: boolean;
+  error: string | null;
+  onAsk: () => void;
+  onKeep: () => void;
+  onRemove: () => void;
+}) {
+  if (!confirming) {
+    return (
+      <button
+        type="button"
+        onClick={onAsk}
+        aria-label="Remove this request"
+        title="Remove this request"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-[color:var(--muted)] transition-colors duration-200 hover:bg-[color:var(--surface-strong)] hover:text-[color:var(--danger)]"
+      >
+        <TrashIcon />
+      </button>
+    );
+  }
+
+  return (
+    <div
+      className="flex shrink-0 flex-col items-end gap-1.5"
+      role="group"
+      aria-label="Confirm removal"
+    >
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          onClick={onKeep}
+          disabled={deleting}
+          className="rounded-md px-2.5 py-1.5 text-xs font-semibold text-[color:var(--muted)] transition-colors duration-200 hover:bg-[color:var(--surface-strong)] hover:text-[color:var(--foreground)] disabled:opacity-50"
+        >
+          Keep
+        </button>
+        <button
+          type="button"
+          onClick={onRemove}
+          disabled={deleting}
+          autoFocus
+          className="rounded-md bg-[color:var(--danger)] px-2.5 py-1.5 text-xs font-semibold text-[color:var(--cream)] transition-opacity duration-200 hover:opacity-90 disabled:opacity-60"
+        >
+          {deleting ? "Removing…" : "Remove"}
+        </button>
+      </div>
+      {error && (
+        <p
+          role="alert"
+          className="max-w-[26ch] text-right text-xs leading-snug text-[color:var(--danger)]"
+        >
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 6h18" />
+      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+    </svg>
   );
 }
