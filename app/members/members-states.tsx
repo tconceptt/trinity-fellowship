@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { PageHero } from "@/app/components/page-hero";
 
 /**
@@ -11,22 +12,42 @@ import { PageHero } from "@/app/components/page-hero";
  * page you landed on.
  */
 
-export function MembersLoading({ title, label }: { title: string; label: string }) {
+export function MembersLoading({
+  title,
+  label,
+  children,
+}: {
+  title: string;
+  label: string;
+  /** Optional skeleton shaped like the content that is about to arrive. */
+  children?: ReactNode;
+}) {
   return (
     <div className="min-h-screen">
       <PageHero compact title={title} />
-      <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8">
+      <section className="mx-auto max-w-5xl px-5 pt-10 pb-16 sm:px-8 sm:pt-12">
         {/* Text rather than a spinner: nothing else on the site spins, and the
             reduced-motion rule in globals.css would freeze one mid-turn. */}
-        <p className="text-sm text-[color:var(--muted)]" role="status" aria-live="polite">
+        <p
+          className={children ? "sr-only" : "text-sm text-[color:var(--muted)]"}
+          role="status"
+          aria-live="polite"
+        >
           {label}
         </p>
+        {children}
       </section>
     </div>
   );
 }
 
-export function NotAMember({ email, onSignOut }: { email: string; onSignOut: () => void }) {
+export function NotAMember({
+  email,
+  onSignOut,
+}: {
+  email: string;
+  onSignOut: () => void;
+}) {
   return (
     <div className="min-h-screen">
       <PageHero
@@ -37,9 +58,11 @@ export function NotAMember({ email, onSignOut }: { email: string; onSignOut: () 
       <section className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-16">
         <p className="max-w-[54ch] leading-relaxed text-[color:var(--muted)]">
           You are signed in as{" "}
-          <strong className="font-semibold text-[color:var(--foreground)]">{email}</strong>. If you
-          believe this is a mistake, or you have joined recently, speak with any of our staff after
-          a Sunday service and we will put it right.
+          <strong className="font-semibold text-[color:var(--foreground)]">
+            {email}
+          </strong>
+          . If you believe this is a mistake, or you have joined recently, speak
+          with any of our staff after a Sunday service and we will put it right.
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
           <button
@@ -60,13 +83,24 @@ export function NotAMember({ email, onSignOut }: { email: string; onSignOut: () 
   );
 }
 
-export function LoadFailed({ title, message }: { title: string; message: string }) {
+export function LoadFailed({
+  title,
+  message,
+}: {
+  title: string;
+  message: string;
+}) {
   return (
     <div className="min-h-screen">
       <PageHero compact title={title} />
       <section className="mx-auto max-w-3xl px-5 py-14 sm:px-8 sm:py-16">
-        <p className="max-w-[54ch] leading-relaxed text-[color:var(--muted)]">{message}</p>
-        <button onClick={() => window.location.reload()} className="btn btn-brand mt-8">
+        <p className="max-w-[54ch] leading-relaxed text-[color:var(--muted)]">
+          {message}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="btn btn-brand mt-8"
+        >
           Try Again
         </button>
       </section>
